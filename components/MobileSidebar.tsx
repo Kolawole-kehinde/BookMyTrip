@@ -1,40 +1,40 @@
 //@ts-nocheck
-import pkg from "@syncfusion/ej2-react-navigations";
-import { useRef } from "react";
-import { Link } from "react-router";
-import { RiMenu2Fill } from "react-icons/ri";
-import { NavItems } from "./NavItems";
+import { useRef } from 'react';
+import { Link } from 'react-router';
+import { NavItems } from './NavItems';
+import pkg from '@syncfusion/ej2-react-navigations';
 
 const { SidebarComponent } = pkg;
 
 const MobileSidebar = () => {
-  const sidebarRef = useRef(null);
+  const sidebarRef = useRef<SidebarComponent | null>(null);
 
   const toggleSidebar = () => {
     sidebarRef.current?.toggle();
   };
 
   return (
-    <div className="mobile-sidebar wrapper lg:hidden">
-      <header className="flex justify-between items-center py-4 border-b border-light-100">
+    <div className="mobile-sidebar wrapper">
+      <header className="flex justify-between items-center px-4 py-3 border-b">
         <Link to="/" className="flex items-center gap-2">
-          <img src="/assets/icons/logo.svg" alt="Logo" className="w-[30px] h-[30px]" />
-          <h1 className="text-lg font-bold">Bookmytrip</h1>
+          <img src="/assets/icons/logo.svg" alt="Logo" className="size-[30px]" />
+          <h1 className="font-semibold text-lg">Bookmytrip</h1>
         </Link>
-        <button onClick={toggleSidebar} aria-label="Toggle sidebar">
-          <RiMenu2Fill fontSize={30} />
+
+        <button onClick={toggleSidebar} aria-label="Toggle Sidebar">
+          <img src="/assets/icons/menu.svg" alt="Menu" className="size-7" />
         </button>
       </header>
 
       <SidebarComponent
+        width={270}
         ref={sidebarRef}
-        width="270px"
         created={() => sidebarRef.current?.hide()}
         closeOnDocumentClick={true}
         showBackdrop={true}
         type="Over"
       >
-        <NavItems handleClick={toggleSidebar} />
+        <NavItems handleItemClick={toggleSidebar} />
       </SidebarComponent>
     </div>
   );

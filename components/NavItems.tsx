@@ -1,9 +1,8 @@
-// NavItems.tsx
 import { cn } from "lib/utils";
-import { NavLink } from "react-router";
+import { Link, NavLink } from "react-router";
 import { sidebarItems } from "~/constants";
 
-export const NavItems = ({ handleClick }: { handleClick?: () => void }) => {
+export const NavItems = ({ handleItemClick }: { handleItemClick?: () => void }) => {
   const user = {
     name: "Khennycool",
     email: "khennycool@gmail.com",
@@ -12,18 +11,21 @@ export const NavItems = ({ handleClick }: { handleClick?: () => void }) => {
 
   return (
     <section className="flex flex-col h-full px-4 py-6 bg-white">
+      {/* Logo */}
+      <Link to="/" className="flex items-center mb-6">
+        <img src="/assets/icons/logo.svg" alt="Logo" className="w-8 h-8" />
+        <h1 className="ml-3 text-lg font-bold">Bookmytrip</h1>
+      </Link>
+
       {/* Navigation */}
-      <nav className="flex-1 flex flex-col gap-2 border-t border-gray-200 pt-4">
-        {sidebarItems.map(({ id, href, label }) => (
-          <NavLink key={id} to={href} className="group" onClick={handleClick}>
-            {({ isActive }) => (
-              <div
-                className={cn(
-                  "flex items-center px-3 py-2 rounded-lg transition",
-                  "text-gray-700 hover:bg-blue-500 hover:text-white",
-                  isActive && "bg-blue-500 text-white"
-                )}
-              >
+      <nav className="container">
+        {sidebarItems?.map(({ id, href, label, icon }) => (
+          <NavLink key={id} to={href}>
+            {({ isActive }: { isActive: boolean }) => (
+              <div className={cn('group nav-item', {
+                'bg-primary-100 !text-white': isActive,
+              })} onClick={handleItemClick}>
+                <img src={icon} alt={label}  className={`group-hover:brightness-0 size-0 group-hover:invert ${isActive ? "brightness-0 invert" : "text-dark-200"}`}/>
                 <span className="ml-2 text-sm font-medium">{label}</span>
               </div>
             )}
@@ -43,7 +45,9 @@ export const NavItems = ({ handleClick }: { handleClick?: () => void }) => {
           <p className="text-xs text-gray-500 truncate">{user.email}</p>
         </div>
         <button
-          onClick={() => console.log("Logout clicked")}
+          onClick={() => {
+            console.log("Logout clicked");
+          }}
           aria-label="Logout"
         >
           <img
@@ -56,4 +60,3 @@ export const NavItems = ({ handleClick }: { handleClick?: () => void }) => {
     </section>
   );
 };
-export default NavItems;

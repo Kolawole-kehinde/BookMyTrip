@@ -1,27 +1,25 @@
+import { MobileSidebar, NavItems } from "components";
+import pkg from '@syncfusion/ej2-react-navigations';
+import { Outlet } from "react-router"; 
 
-import syncfusionNavigation from "@syncfusion/ej2-react-navigations";
-import { MobileSidebar } from "components";
-import { NavItems } from "components/NavItems";
-import { Outlet } from "react-router";
-const { SidebarComponent } = syncfusionNavigation;
-
+const { SidebarComponent } = pkg;
 
 const AdminLayout = () => {
-
   return (
-    <div className="admin-layout flex h-screen">
-        <MobileSidebar/>
-      <aside className="hidden lg:block">
-        <SidebarComponent
-          width="270px"
-          enableGestures={false}
-        >
+    <div className="admin-layout">
+      <MobileSidebar />
+      
+      {/* Desktop Sidebar */}
+      <aside className="w-full max-w-[270px] hidden lg:block">
+        <SidebarComponent width={270} enableGestures={false}>
           <NavItems />
         </SidebarComponent>
       </aside>
-      <div className="main-content flex-1 overflow-auto p-6">
+
+      {/* Main Content */}
+      <aside className="children">
         <Outlet />
-      </div>
+      </aside>
     </div>
   );
 };
