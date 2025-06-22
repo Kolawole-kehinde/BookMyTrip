@@ -1,1 +1,1 @@
-export {default as NavItems} from './NavItems';
+export { NavItems } from '../components/NavItems';
