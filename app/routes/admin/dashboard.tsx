@@ -7,11 +7,11 @@ const Dashboard = () => {
     }
 
     const dashboardStats ={
-        totalUsers: 1500,
-        userJoined: {currentMonth: 150, previousMonth: 100},
-        totalTrips: 2000,
-        tripCreated: {currentMonth: 50, previousMonth: 30},
-        userRole: {total: 70, currentMonth: 30, previousMonth: 25},
+        totalUsers: 15000,
+        userJoined: {currentMonth: 218, lastMonthCount: 176},
+        totalTrips: 3210,
+        tripCreated: {currentMonth: 150, lastMonthCount: 250},
+        userRole: {total: 62, currentMonth: 25, lastMonthCount: 15},
     }
 
     const { totalUsers, userJoined, tripCreated, userRole, totalTrips } = dashboardStats;
@@ -29,19 +29,19 @@ const Dashboard = () => {
              headerTitle="Total Users"
              total={totalUsers}
              currentMonthCount={userJoined.currentMonth}
-             previousMonthCount={userJoined.previousMonth}
+             lastMonthCount={userJoined.lastMonthCount}
             />
             <StatsCard 
              headerTitle="Total Trips"
              total={totalTrips}
              currentMonthCount={tripCreated.currentMonth}
-             previousMonthCount={tripCreated.previousMonth}
+             lastMonthCount={tripCreated.lastMonthCount}
             />
             <StatsCard 
-             headerTitle="Users"
+             headerTitle="Active Users Today"
              total={totalUsers}
              currentMonthCount={userRole.currentMonth}
-             previousMonthCount={userRole.previousMonth}
+             lastMonthCount={userRole.lastMonthCount}
             />
            
          </div>
