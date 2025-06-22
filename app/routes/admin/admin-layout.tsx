@@ -1,5 +1,6 @@
 
 import syncfusionNavigation from "@syncfusion/ej2-react-navigations";
+import { MobileSidebar } from "components";
 import { NavItems } from "components/NavItems";
 import { Outlet } from "react-router";
 const { SidebarComponent } = syncfusionNavigation;
@@ -9,6 +10,7 @@ const AdminLayout = () => {
 
   return (
     <div className="admin-layout flex h-screen">
+        <MobileSidebar/>
       <aside className="hidden lg:block">
         <SidebarComponent
           width="270px"
