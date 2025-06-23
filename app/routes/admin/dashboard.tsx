@@ -38,7 +38,7 @@ const Dashboard = () => {
 
       {/* Created Trips Section */}
       <section className="mt-10">
-        <h1 className="text-xl font-semibold mb-4">Created Trips</h1>
+        <h1 className="text-xl leading-[28px] font-semibold mb-4 font-figtree">Trips</h1>
         <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           {allTrips?.slice(0, 4)?.map(({ id, name, imageUrls, itinerary, tags, travelStyle, estimatedPrice }) => (
             <TripCard

@@ -5,18 +5,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   plugins: [tailwindcss(), reactRouter(), tsconfigPaths()],
-  optimizeDeps: {
-    include: [
-      '@syncfusion/ej2-react-buttons',
-      '@syncfusion/ej2-buttons',
-      '@syncfusion/ej2-base',
-    ]
-  },
   ssr: {
-    noExternal: [
-      '@syncfusion/ej2-react-buttons',
-      '@syncfusion/ej2-buttons',
-      '@syncfusion/ej2-base',
-    ]
+    noExternal: ["@syncfusion/"]
   }
 });
