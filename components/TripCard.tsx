@@ -1,8 +1,10 @@
 import React from 'react'
 
-const TripCard = () => {
+const TripCard = ({id, name, imageUrls, location, tags, travelStyle, price}) => {
   return (
-    <div>TripCard</div>
+    <div>
+       <Link
+    </div>
   )
 }
 
