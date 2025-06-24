@@ -1,4 +1,5 @@
-import { cn } from "lib/utils";
+// NavItems.tsx
+
 import { Link, NavLink } from "react-router";
 import { sidebarItems } from "~/constants";
 
@@ -23,22 +24,30 @@ export const NavItems = ({
 
       {/* Navigation */}
       <nav className="container">
-        {sidebarItems?.map(({ id, href, label, icon }) => (
+        {sidebarItems?.map(({ id, href, label}) => (
           <NavLink key={id} to={href}>
             {({ isActive }: { isActive: boolean }) => (
               <div
-                className={cn("group nav-item", {
-                  "bg-primary-100 !text-white": isActive,
-                })}
-                onClick={handleItemClick} // ✅ closes sidebar when link is clicked
+                tabIndex={0}
+                className={`group nav-item flex items-center cursor-pointer px-3 py-2 rounded-md select-none ${
+                  isActive ? "bg-primary-100 !text-white" : ""
+                }`}
+                onClick={handleItemClick}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleItemClick?.();
+                  }
+                }}
               >
-                <img
+                {/* <img
                   src={icon}
                   alt={label}
-                  className={`group-hover:brightness-0 size-0 group-hover:invert ${
+                  className={cn(
+                    "w-6 h-6 group-hover:brightness-0 group-hover:invert",
                     isActive ? "brightness-0 invert" : "text-dark-200"
-                  }`}
-                />
+                  )}
+                /> */}
                 <span className="ml-2 text-sm font-medium">{label}</span>
               </div>
             )}
@@ -47,7 +56,7 @@ export const NavItems = ({
       </nav>
 
       {/* User Footer */}
-      <footer className="flex items-center mt-56 gap-3 border-t border-gray-200 pt-4">
+      <footer className="flex items-center mt-auto gap-3 border-t border-gray-200 pt-4">
         <img
           src={user.imageUrl}
           alt={user.name}
@@ -62,6 +71,7 @@ export const NavItems = ({
             console.log("Logout clicked");
           }}
           aria-label="Logout"
+          className="p-1"
         >
           <img
             src="/assets/icons/logout.svg"

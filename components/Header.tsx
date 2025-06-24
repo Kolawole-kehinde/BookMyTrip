@@ -1,21 +1,38 @@
-import { cn } from "lib/utils";
-import { useLocation } from "react-router";
-
 interface HeaderProps {
   title: string;
   description: string;
+  variant?: "home" | "default";
 }
 
-const Header = ({title, description}: HeaderProps) => {
-    const location = useLocation();
-  return ( 
+const Header = ({
+  title,
+  description,
+  variant = "default",
+}: HeaderProps) => {
+  return (
     <header className="header">
-      <article>
-         <h1 className={cn(" text-dark-100 ", location.pathname === "/" ? 'text-2xl md:text-4xl font-black': 'text-xl md:text-2xl font-semibold' )}>{title}</h1>
-        <p className={cn(" text-gray-100 font-normal ", location.pathname === "/" ? 'text-base md:text-lg': 'text-sm md:text-lg' )}>{description}</p>
-      </article>
+      <div>
+        <h1
+          className={
+            variant === "home"
+              ? "text-dark-100 text-2xl md:text-4xl font-black"
+              : "text-dark-100 text-xl md:text-2xl font-semibold"
+          }
+        >
+          {title}
+        </h1>
+        <p
+          className={
+            variant === "home"
+              ? "text-gray-100 font-normal text-base md:text-lg"
+              : "text-gray-100 font-normal text-sm md:text-lg"
+          }
+        >
+          {description}
+        </p>
+      </div>
     </header>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

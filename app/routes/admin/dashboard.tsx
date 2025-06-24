@@ -2,13 +2,14 @@ import { StatsCard, TripCard } from "components";
 import Header from "components/Header";
 import { allTrips, dashboardStats, user } from "~/constants/trips";
 
-const { totalUsers, userJoined, tripCreated, userRole, totalTrips } = dashboardStats;
-
+const { totalUsers, userJoined, tripCreated, userRole, totalTrips } =
+  dashboardStats;
+const welcomeTitle = `Welcome back, ${user?.name ?? "Guest"} 👋`;
 const Dashboard = () => {
   return (
     <main className="wrapper">
       <Header
-        title={`Welcome back, ${user?.name ?? "Guest"} 👋`}
+        title={welcomeTitle}
         description="Track activity, trends, and popular destinations in real time"
       />
 
@@ -38,20 +39,34 @@ const Dashboard = () => {
 
       {/* Created Trips Section */}
       <section className="mt-5">
-        <h1 className="text-xl leading-[28px] font-semibold mb-4 font-figtree">Trips</h1>
+        <h1 className="text-xl leading-[28px] font-semibold mb-4 font-figtree">
+          Trips
+        </h1>
         <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-          {allTrips?.slice(0, 4)?.map(({ id, name, imageUrls, itinerary, tags, travelStyle, estimatedPrice }) => (
-            <TripCard
-              key={id}
-              id={id.toString()}
-              name={name}
-              imageUrls={imageUrls?.[0] ?? "/assets/placeholder.png"}
-              location={itinerary?.[0]?.location ?? "Unknown"}
-              tags={tags}
-              travelStyle={travelStyle}
-              price={estimatedPrice}
-            />
-          ))}
+          {allTrips
+            ?.slice(0, 4)
+            ?.map(
+              ({
+                id,
+                name,
+                imageUrls,
+                itinerary,
+                tags,
+                travelStyle,
+                estimatedPrice,
+              }) => (
+                <TripCard
+                  key={id}
+                  id={id.toString()}
+                  name={name}
+                  imageUrls={imageUrls?.[0] ?? "/assets/placeholder.png"}
+                  location={itinerary?.[0]?.location ?? "Unknown"}
+                  tags={tags}
+                  travelStyle={travelStyle}
+                  price={estimatedPrice}
+                />
+              )
+            )}
         </div>
       </section>
     </main>

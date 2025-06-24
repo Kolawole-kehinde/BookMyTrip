@@ -1,3 +1,4 @@
+// MobileSidebar.tsx
 import { useState } from "react";
 import { NavItems } from "components";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
@@ -5,7 +6,7 @@ import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 const MobileSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const toggleSidebar = () => setIsOpen(prev => !prev);
+  const toggleSidebar = () => setIsOpen((prev) => !prev);
   const closeSidebar = () => setIsOpen(false);
 
   return (
@@ -49,9 +50,9 @@ const MobileSidebar = () => {
           <h2 className="text-lg font-semibold">BookMyTrip</h2>
         </div>
 
-        <aside className="p-4 overflow-y-auto">
+        <nav className="p-4 overflow-y-auto">
           <NavItems handleItemClick={closeSidebar} />
-        </aside>
+        </nav>
       </aside>
     </div>
   );
