@@ -2,7 +2,11 @@ import { cn } from "lib/utils";
 import { Link, NavLink } from "react-router";
 import { sidebarItems } from "~/constants";
 
-export const NavItems = ({ handleItemClick }: { handleItemClick?: () => void }) => {
+export const NavItems = ({
+  handleItemClick,
+}: {
+  handleItemClick?: () => void;
+}) => {
   const user = {
     name: "Khennycool",
     email: "khennycool@gmail.com",
@@ -22,10 +26,19 @@ export const NavItems = ({ handleItemClick }: { handleItemClick?: () => void }) 
         {sidebarItems?.map(({ id, href, label, icon }) => (
           <NavLink key={id} to={href}>
             {({ isActive }: { isActive: boolean }) => (
-              <div className={cn('group nav-item', {
-                'bg-primary-100 !text-white': isActive,
-              })} onClick={handleItemClick}>
-                <img src={icon} alt={label}  className={`group-hover:brightness-0 size-0 group-hover:invert ${isActive ? "brightness-0 invert" : "text-dark-200"}`}/>
+              <div
+                className={cn("group nav-item", {
+                  "bg-primary-100 !text-white": isActive,
+                })}
+                onClick={handleItemClick} // ✅ closes sidebar when link is clicked
+              >
+                <img
+                  src={icon}
+                  alt={label}
+                  className={`group-hover:brightness-0 size-0 group-hover:invert ${
+                    isActive ? "brightness-0 invert" : "text-dark-200"
+                  }`}
+                />
                 <span className="ml-2 text-sm font-medium">{label}</span>
               </div>
             )}

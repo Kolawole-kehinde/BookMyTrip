@@ -1,41 +1,58 @@
-//@ts-nocheck
-import { useRef } from 'react';
-import { Link } from 'react-router';
-import { NavItems } from './NavItems';
-import pkg from '@syncfusion/ej2-react-navigations';
-
-const { SidebarComponent } = pkg;
+import { useState } from "react";
+import { NavItems } from "components";
+import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 
 const MobileSidebar = () => {
-  const sidebarRef = useRef<SidebarComponent | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const toggleSidebar = () => {
-    sidebarRef.current?.toggle();
-  };
+  const toggleSidebar = () => setIsOpen(prev => !prev);
+  const closeSidebar = () => setIsOpen(false);
 
   return (
-    <div className="mobile-sidebar wrapper">
-      <header className="flex justify-between items-center px-4 py-3 border-b">
-        <Link to="/" className="flex items-center gap-2">
-          <img src="/assets/icons/logo.svg" alt="Logo" className="size-[30px]" />
-          <h1 className="font-semibold text-lg">Bookmytrip</h1>
-        </Link>
-
-        <button onClick={toggleSidebar} aria-label="Toggle Sidebar">
-          <img src="/assets/icons/menu.svg" alt="Menu" className="size-7" />
+    <div className="lg:hidden">
+      {/* Top nav bar */}
+      <header className="flex items-center justify-between border-b border-gray-300 p-4">
+        <div className="flex items-center gap-2">
+          <img
+            src="/assets/icons/logo.svg"
+            alt="BookMyTrip Logo"
+            className="w-8 h-8 object-contain"
+          />
+          <h1 className="text-lg font-semibold">BookMyTrip</h1>
+        </div>
+        <button
+          onClick={toggleSidebar}
+          aria-label={isOpen ? "Close sidebar" : "Open sidebar"}
+          className="p-2"
+        >
+          {isOpen ? (
+            <AiOutlineClose className="w-6 h-6" />
+          ) : (
+            <AiOutlineMenu className="w-6 h-6" />
+          )}
         </button>
       </header>
 
-      <SidebarComponent
-        width={270}
-        ref={sidebarRef}
-        created={() => sidebarRef.current?.hide()}
-        closeOnDocumentClick={true}
-        showBackdrop={true}
-        type="Over"
+      {/* Slide-in sidebar */}
+      <aside
+        className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 z-50 ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+        aria-hidden={!isOpen}
       >
-        <NavItems handleItemClick={toggleSidebar} />
-      </SidebarComponent>
+        <div className="flex items-center gap-2 p-4 border-b border-gray-300">
+          <img
+            src="/assets/icons/logo.svg"
+            alt="BookMyTrip Logo"
+            className="w-8 h-8 object-contain"
+          />
+          <h2 className="text-lg font-semibold">BookMyTrip</h2>
+        </div>
+
+        <aside className="p-4 overflow-y-auto">
+          <NavItems handleItemClick={closeSidebar} />
+        </aside>
+      </aside>
     </div>
   );
 };
