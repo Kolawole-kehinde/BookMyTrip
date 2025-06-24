@@ -6,14 +6,14 @@ const { totalUsers, userJoined, tripCreated, userRole, totalTrips } = dashboardS
 
 const Dashboard = () => {
   return (
-    <main className="wrapper py-6">
+    <main className="wrapper">
       <Header
         title={`Welcome back, ${user?.name ?? "Guest"} 👋`}
         description="Track activity, trends, and popular destinations in real time"
       />
 
       {/* Stats Section */}
-      <section className="flex flex-col gap-6 mt-6">
+      <section className="flex flex-col gap-6 mt-5">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <StatsCard
             headerTitle="Total Users"
@@ -37,7 +37,7 @@ const Dashboard = () => {
       </section>
 
       {/* Created Trips Section */}
-      <section className="mt-10">
+      <section className="mt-5">
         <h1 className="text-xl leading-[28px] font-semibold mb-4 font-figtree">Trips</h1>
         <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           {allTrips?.slice(0, 4)?.map(({ id, name, imageUrls, itinerary, tags, travelStyle, estimatedPrice }) => (

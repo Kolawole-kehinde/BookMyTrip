@@ -24,13 +24,13 @@ const TripCard = ({ id, name, imageUrls, location, tags, price }: TripCardProps)
       : `/trips/${id}`;
 
   return (
-    <div className="w-full max-w-sm bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 relative">
+    <div className="shadow-300 bg-white rounded-[20px] flex-col w-full relative mb-6">
       <Link to={basePath} aria-label={`View details for trip: ${name}`} className="block w-full h-full">
         {/* Trip Image */}
         <img
           src={imageUrls}
           alt={name}
-          className="w-full h-48 object-cover "
+          className="w-full h-[160px] rounded-t-xl object-cover aspect-video "
         />
 
         {/* Trip Content */}
@@ -42,7 +42,7 @@ const TripCard = ({ id, name, imageUrls, location, tags, price }: TripCardProps)
           </figure>
         </article>
 
-        {/* Tags styled with Tailwind */}
+            {/* Tags styled with Tailwind */}
         <div className="mt-4 px-4 pb-5 flex flex-wrap gap-2">
           {tags?.map((tag, index) => (
             <span

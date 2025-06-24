@@ -34,7 +34,7 @@ export const NavItems = ({ handleItemClick }: { handleItemClick?: () => void }) 
       </nav>
 
       {/* User Footer */}
-      <footer className="flex items-center mt-32 gap-3 border-t border-gray-200 pt-4">
+      <footer className="flex items-center mt-56 gap-3 border-t border-gray-200 pt-4">
         <img
           src={user.imageUrl}
           alt={user.name}
