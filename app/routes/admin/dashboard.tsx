@@ -2,8 +2,8 @@ import { StatsCard, TripCard } from "components";
 import Header from "components/Header";
 import { allTrips, dashboardStats, user } from "~/constants/trips";
 
-const { totalUsers, userJoined, tripCreated, userRole, totalTrips } =
-  dashboardStats;
+const { totalUsers, userJoined, tripCreated, userRole, totalTrips } = dashboardStats;
+
 const welcomeTitle = `Welcome back, ${user?.name ?? "Guest"} 👋`;
 const Dashboard = () => {
   return (
