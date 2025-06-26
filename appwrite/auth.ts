@@ -1,6 +1,7 @@
-import { OAuthProvider, Query } from "appwrite";
+import { ID, OAuthProvider, Query } from "appwrite";
 import { account, appwriteConfig, database } from "./client";
 import { redirect } from "react-router";
+
 
 
 
@@ -70,20 +71,74 @@ export const getGooglePic = async (): Promise<string | null> => {
   }
 };
 
+export const storeUserData = async (): Promise<any | null> => {
+  try {
+    // Get the currently logged-in user
+    const user = await account.get();
+    if (!user) return null;
 
+    // Check if user already exists in the database
+    const { documents } = await database.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      [Query.equal('accountId', user.$id)]
+    );
 
-export const logoutUser = async () => {
-    try {
-        
-    } catch (error) {
-       console.log(error);
-    }
-} 
+    if (documents.length > 0) return documents[0];
+
+    // Get profile picture from Google
+    const imageUrl = await getGooglePic();
+
+    // Create a new user document in Appwrite database
+    const newUser = await database.createDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      ID.unique(),
+      {
+        accountId: user.$id,
+        email: user.email,
+        name: user.name,
+        imageUrl: imageUrl || '',
+        joinedAt: new Date().toISOString(),
+      }
+    );
+
+    return newUser;
+
+  } catch (error) {
+    console.log('storeUserData error:', error);
+    return null;
+  }
+};
 
 export const getExistingUser = () => {
     try {
+      const user = await account.get();
+      if(!user) return null;
+
+      //check if the user exists in DB
+       const { documents } = await database.listDocuments(
+        appwriteConfig.databaseId,
+        appwriteConfig.userCollectionId,
+        [ Query.equal('accountId', user.$id)]
+       );
+
+       if (documents.length === 0) return null;
+
+       return documents[0];
+    
+
         
     } catch (error) {
-       console.log(error);
+       console.log('getExistingUser error:',error);
+       return null
     }
 } 
+
+export const logoutUser = async () => {
+  try {
+    await account.deleteSession("current");
+  } catch (error) {
+    console.error("Error during logout:", error);
+  }
+};
