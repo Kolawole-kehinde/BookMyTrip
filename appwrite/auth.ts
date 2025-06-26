@@ -2,26 +2,24 @@ import { ID, OAuthProvider, Query } from "appwrite";
 import { account, appwriteConfig, database } from "./client";
 import { redirect } from "react-router";
 
-/**
- * Initiates login with Google using Appwrite OAuth2.
- */
+
+
+//Initiates login with Google using Appwrite OAuth2.
 export const loginWithGoogle = async (): Promise<void> => {
-  try {
-    await account.createOAuth2Session(OAuthProvider.Google);
+  try { await account.createOAuth2Session(OAuthProvider.Google);
   } catch (error) {
     console.error("Error logging in with Google:", error);
   }
 };
 
-/**
- * Fetches the logged-in Appwrite user and their data from the database.
- * Redirects to /sign-in if not authenticated.
- */
+// Fetches the logged-in Appwrite user and their data from the database.
+ // Redirects to /sign-in if not authenticated.
+ 
 export const getUser = async (): Promise<any | null> => {
   try {
     const user = await account.get();
     if (!user) {
-      redirect("/sign-in"); // corrected syntax
+      redirect("/sign-in");
       return null;
     }
 
@@ -41,9 +39,8 @@ export const getUser = async (): Promise<any | null> => {
   }
 };
 
-/**
- * Fetches the user's Google profile picture using the People API.
- */
+//Fetches the user's Google profile picture using the People API.
+
 export const getGooglePic = async (): Promise<string | null> => {
   try {
     const session = await account.getSession("current");
@@ -76,9 +73,8 @@ export const getGooglePic = async (): Promise<string | null> => {
   }
 };
 
-/**
- * Creates a new user in the Appwrite DB if they don't exist already.
- */
+// Creates a new user in the Appwrite DB if they don't exist already.
+
 export const storeUserData = async (): Promise<any | null> => {
   try {
     const user = await account.get();
@@ -114,9 +110,8 @@ export const storeUserData = async (): Promise<any | null> => {
   }
 };
 
-/**
- * Fetches existing user from Appwrite DB if present.
- */
+//Fetches existing user from Appwrite DB if present.
+ 
 export const getExistingUser = async (): Promise<any | null> => {
   try {
     const user = await account.get();
@@ -135,9 +130,8 @@ export const getExistingUser = async (): Promise<any | null> => {
   }
 };
 
-/**
- * Logs out the currently logged-in user.
- */
+// Logs out the currently logged-in user.
+ 
 export const logoutUser = async (): Promise<void> => {
   try {
     await account.deleteSession("current");

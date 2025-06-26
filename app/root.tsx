@@ -23,14 +23,6 @@ export const links: Route.LinksFunction = () => [
       "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   },
 ];
- 
-
-
-// Safe import and usage of registerLicense from Syncfusion
-
-import syncfusionBase from "@syncfusion/ej2-base";
-
-syncfusionBase.registerLicense(import.meta.env.VITE_SYNCFUSION_LICENSE_KEY);
 
 
 export function Layout({ children }: { children: React.ReactNode }) {
