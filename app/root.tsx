@@ -27,9 +27,11 @@ export const links: Route.LinksFunction = () => [
 
 
 // Safe import and usage of registerLicense from Syncfusion
-import pkg from '@syncfusion/ej2-base';
-const {registerLicense} = pkg;
-registerLicense(import.meta.env.VITE_SYNCFUSION_LICENSE_KEY);
+
+import syncfusionBase from "@syncfusion/ej2-base";
+
+syncfusionBase.registerLicense(import.meta.env.VITE_SYNCFUSION_LICENSE_KEY);
+
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (

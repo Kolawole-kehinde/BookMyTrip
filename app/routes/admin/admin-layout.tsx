@@ -1,5 +1,26 @@
+import { getExistingUser, storeUserData } from "appwrite/auth";
+import { account } from "appwrite/client";
 import { MobileSidebar, NavItems } from "components";
-import { Outlet } from "react-router";
+import { Outlet, redirect } from "react-router";
+
+export async function clientLoader() {
+  try {
+    const user = await account.get();
+    if (!user?.$id) return redirect('/sign-in');
+
+    const existingUser = await getExistingUser(); 
+
+    if (existingUser?.status === 'user') {
+      return redirect('/');
+    }
+
+    return existingUser?.$id ? existingUser : await storeUserData();
+
+  } catch (e) {
+    console.error('Error in clientLoader', e);
+    return redirect('/sign-in');
+  }
+}
 
 const AdminLayout = () => {
   return (

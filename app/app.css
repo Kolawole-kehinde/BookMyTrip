@@ -102,10 +102,6 @@
       @apply flex flex-col gap-5 mt-2.5;
     }
   }
-  .auth {
-    @apply w-full h-screen flex bg-auth bg-cover bg-no-repeat;
-  }
-
   .payment-success {
     @apply flex flex-col gap-10 pb-20 items-center justify-center h-screen;
     section {
