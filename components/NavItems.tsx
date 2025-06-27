@@ -40,14 +40,7 @@ export const NavItems = ({
                   }
                 }}
               >
-                {/* <img
-                  src={icon}
-                  alt={label}
-                  className={cn(
-                    "w-6 h-6 group-hover:brightness-0 group-hover:invert",
-                    isActive ? "brightness-0 invert" : "text-dark-200"
-                  )}
-                /> */}
+              
                 <span className="ml-2 text-sm font-medium">{label}</span>
               </div>
             )}

@@ -5,10 +5,15 @@ import { redirect } from "react-router";
 
 
 //Initiates login with Google using Appwrite OAuth2.
-export const loginWithGoogle = async (): Promise<void> => {
-  try { await account.createOAuth2Session(OAuthProvider.Google);
+export const loginWithGoogle = async () => {
+  try {
+    account.createOAuth2Session(
+      OAuthProvider.Google,
+      `${window.location.origin}/`,
+      `${window.location.origin}/404`
+    );
   } catch (error) {
-    console.error("Error logging in with Google:", error);
+    console.error("Error during OAuth2 session creation:", error);
   }
 };
 

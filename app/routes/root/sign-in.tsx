@@ -7,7 +7,7 @@ const SignIn = () => {
 
   const handleLogin = async () => {
     try {
-      await loginWithGoogle(); // will redirect to Google, then to /dashboard
+      await loginWithGoogle();
     } catch (err) {
       console.error("Login failed:", err);
     }
