@@ -1,13 +1,16 @@
-// routes/admin/dashboard.tsx
 import { StatsCard, TripCard } from "components";
 import Header from "components/Header";
+import { useLoaderData } from "react-router";
 import { allTrips, dashboardStats, user } from "~/constants/trips";
 
 const { totalUsers, userJoined, tripCreated, userRole, totalTrips } = dashboardStats;
 
-const welcomeTitle = `Welcome back, ${user?.name ?? "Guest"} 👋`;
-
 const Dashboard = () => {
+  // const data = useLoaderData() ?? {};
+  // const user = data.user ?? null;
+
+  const welcomeTitle = `Welcome back, ${user?.name ?? "Guest"} 👋`;
+
   return (
     <div className="wrapper">
       <Header
