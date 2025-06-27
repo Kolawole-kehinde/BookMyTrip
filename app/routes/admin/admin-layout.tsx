@@ -7,21 +7,21 @@ import { Outlet, redirect } from "react-router";
 export async function clientLoader() {
   try {
     const user = await account.get();
-
-    if (user?.$id) return null;
+    if (!user) return redirect("/sign-in");
 
     const existingUser = await getExistingUser();
 
-    if (existingUser?.status === "user") {
-      return null;
+    if (!existingUser) {
+      await storeUserData(); // 👈 Add this to ensure it's stored after login
     }
 
-    return existingUser?.$id ? existingUser : await storeUserData();
-  } catch (e) {
-    console.error("Error in clientLoader:", e);
+    return null;
+  } catch (error) {
+    console.error("clientLoader error:", error);
     return redirect("/sign-in");
   }
 }
+
 
 const AdminLayout = () => {
   return (
