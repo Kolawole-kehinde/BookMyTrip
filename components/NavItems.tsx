@@ -1,6 +1,7 @@
 // NavItems.tsx
 
-import { Link, NavLink } from "react-router";
+import { logoutUser } from "appwrite/auth";
+import { Link, NavLink, useLoaderData, useNavigate } from "react-router";
 import { sidebarItems } from "~/constants";
 
 export const NavItems = ({
@@ -8,10 +9,12 @@ export const NavItems = ({
 }: {
   handleItemClick?: () => void;
 }) => {
-  const user = {
-    name: "Khennycool",
-    email: "khennycool@gmail.com",
-    imageUrl: "/assets/images/david.webp",
+  const user = useLoaderData();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logoutUser();
+    navigate("/sign-in");
   };
 
   return (
@@ -24,7 +27,7 @@ export const NavItems = ({
 
       {/* Navigation */}
       <nav className="container">
-        {sidebarItems?.map(({ id, href, label}) => (
+        {sidebarItems?.map(({ id, href, label }) => (
           <NavLink key={id} to={href}>
             {({ isActive }: { isActive: boolean }) => (
               <div
@@ -40,7 +43,6 @@ export const NavItems = ({
                   }
                 }}
               >
-              
                 <span className="ml-2 text-sm font-medium">{label}</span>
               </div>
             )}
@@ -51,25 +53,20 @@ export const NavItems = ({
       {/* User Footer */}
       <footer className="flex items-center mt-auto gap-3 border-t border-gray-200 pt-4">
         <img
-          src={user.imageUrl}
-          alt={user.name}
+          src={user?.imageUrl || "./assets/images/david.webp"}
+          alt={user?.name || "Khennycool"}
           className="w-10 h-10 rounded-full"
+          referrerPolicy="no-referrer"
         />
         <div className="flex-1">
-          <h2 className="text-sm font-semibold truncate">{user.name}</h2>
-          <p className="text-xs text-gray-500 truncate">{user.email}</p>
+          <h2 className="text-sm font-semibold truncate">{user?.name}</h2>
+          <p className="text-[10px] text-gray-500 truncate">{user?.email}</p>
         </div>
-        <button
-          onClick={() => {
-            console.log("Logout clicked");
-          }}
-          aria-label="Logout"
-          className="p-1"
-        >
+        <button onClick={handleLogout} aria-label="Logout" className="p-1">
           <img
             src="/assets/icons/logout.svg"
             alt="Logout"
-            className="w-5 h-5"
+            className="size-4"
           />
         </button>
       </footer>

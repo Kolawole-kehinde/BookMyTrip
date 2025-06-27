@@ -9,18 +9,19 @@ export async function clientLoader() {
     const user = await account.get();
     if (!user) return redirect("/sign-in");
 
-    const existingUser = await getExistingUser();
+    let existingUser = await getExistingUser();
 
     if (!existingUser) {
-      await storeUserData(); // 👈 Add this to ensure it's stored after login
+      existingUser = await storeUserData(); 
     }
 
-    return null;
+    return existingUser;
   } catch (error) {
     console.error("clientLoader error:", error);
     return redirect("/sign-in");
   }
 }
+
 
 
 const AdminLayout = () => {

@@ -4,7 +4,7 @@ import { formatDate } from "lib/utils";
       id: 1,
       name: "Thornridge Cir. Shiloh",
       imageUrls: ["/assets/images/sample1.jpg"],
-      itinerary: [{ location: "St George’s Ln Singapore" }],
+      itinerary: [{ location: "St George’s Singapore" }],
       tags: ["Adventure", "Culture"],
       travelStyle: "Solo",
       estimatedPrice: "$1,000",

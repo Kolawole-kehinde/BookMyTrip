@@ -50,7 +50,7 @@ const StatsCard = ({
         <img
           src={`/assets/icons/${isDecrement ? "decrement.svg" : "increment.svg"}`}
           alt={isDecrement ? "Decrease trend icon" : "Increase trend icon"}
-          className="size-32 md:size-24"
+          className="size-32 md:size-20"
         />
       </div>
     </article>
