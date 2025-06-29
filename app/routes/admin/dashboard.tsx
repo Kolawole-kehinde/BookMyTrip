@@ -4,9 +4,6 @@ import { allTrips, dashboardStats, user } from "~/constants/trips";
 
 const { totalUsers, userJoined, tripCreated, userRole, totalTrips } = dashboardStats;
 
-export async function loader() {
-  throw new Error("some error thrown in a loader");
-}
 
 const Dashboard = () => {
   // const data = useLoaderData() ?? {};

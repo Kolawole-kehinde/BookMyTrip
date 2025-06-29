@@ -46,8 +46,7 @@ function handleRequest(
               status: responseStatusCode,
             })
           );
-          // this enables distributed tracing between client and server
-          pipe(Sentry.getMetaTagTransformer(body));
+          // this enables distributed tracing between client and serve
 
           pipe(body);
         },
