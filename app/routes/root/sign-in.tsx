@@ -31,7 +31,7 @@ const SignIn = () => {
             </p>
           </article>
           <button
-            className="bg-primary-100 text-white py-1 w-[300px] rounded-2xl flex items-center justify-center gap-2"
+            className="bg-primary-100 text-white py-1 w-[300px] rounded-xl flex items-center justify-center gap-2"
             onClick={handleLogin}
           >
             <FcGoogle fontSize={30} />
