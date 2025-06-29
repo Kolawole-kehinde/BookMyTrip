@@ -13,6 +13,7 @@ import "./app.css";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
+  { rel: "icon", type: "favicon", href: "/assets/icons/BookMyTrip.png" },
   {
     rel: "preconnect",
     href: "https://fonts.gstatic.com",
