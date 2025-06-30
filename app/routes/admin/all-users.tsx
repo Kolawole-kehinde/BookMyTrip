@@ -7,6 +7,7 @@ import {
 import { users } from "~/constants/trips";
 import { cn } from "lib/utils";
 
+
 const AllUsers = () => {
   return (
     <main className="all-users wrapper">
@@ -14,6 +15,7 @@ const AllUsers = () => {
         title="Manage Users"
         description="Filter, sort, and access detailed user profiles"
       />
+      
       <GridComponent dataSource={users} gridLines="None">
         <ColumnsDirective>
           <ColumnDirective
@@ -52,7 +54,7 @@ const AllUsers = () => {
           />
           <ColumnDirective
             field="status"
-            headerText="Type"
+            headerText="Role"
             width="100"
             textAlign="Left"
             template={({ status }: UserData) => (

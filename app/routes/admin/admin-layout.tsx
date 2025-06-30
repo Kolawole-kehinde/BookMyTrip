@@ -3,6 +3,7 @@ import { getExistingUser, storeUserData } from "appwrite/auth";
 import { account } from "appwrite/client";
 import { MobileSidebar, NavItems } from "components";
 import { Outlet, redirect } from "react-router";
+import {SidebarComponent} from '@syncfusion/ej2-react-navigations'
 
 export async function clientLoader() {
   try {
@@ -31,10 +32,13 @@ const AdminLayout = () => {
       <MobileSidebar />
 
       {/* Desktop Sidebar */}
-      <aside className="w-full max-w-[270px] hidden lg:flex flex-col bg-gray-100 border-r border-gray-300">
-        <nav className="h-full overflow-y-auto">
+      <aside className="w-full max-w-[270px] hidden lg:block">
+        <SidebarComponent
+        width={270}
+        enableGestures={false}
+        >
           <NavItems />
-        </nav>
+        </SidebarComponent>
       </aside>
 
       {/* Main Content */}

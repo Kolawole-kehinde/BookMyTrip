@@ -52,8 +52,8 @@ import { formatDate } from "lib/utils";
       name: "John Doe",
       email: "john.doe@example.com",
       imageUrl: "/assets/images/david.webp",
-      dateJoined: formatDate("2025-01-01"),
-      itineraryCreated: 10,
+      dateJoined: formatDate("2025-06-29"),
+      itineraryCreated: 4,
       status: "user",
     },
     {
@@ -61,8 +61,8 @@ import { formatDate } from "lib/utils";
       name: "Jane Smith",
       email: "jane.smith@example.com",
       imageUrl: "/assets/images/david.webp",
-      dateJoined: formatDate("2025-01-02"),
-      itineraryCreated: 4,
+      dateJoined: formatDate("2025-06-29"),
+      itineraryCreated: 3,
       status: "user",
     },
     {
@@ -70,8 +70,8 @@ import { formatDate } from "lib/utils";
       name: "John Smith",
       email: "john.smith@example.com",
       imageUrl: "/assets/images/david.webp",
-      dateJoined: formatDate("2025-01-03"),
-      itineraryCreated: 8,
+      dateJoined: formatDate("2025-6-28"),
+      itineraryCreated: 5,
       status: "admin",
     },
   ];

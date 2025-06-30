@@ -1,6 +1,8 @@
 import { ID, OAuthProvider, Query } from "appwrite";
 import { account, appwriteConfig, database } from "./client";
 import { redirect } from "react-router";
+import { Q } from "node_modules/react-router/dist/development/lib-C1JSsICm.mjs";
+import { user } from "~/constants/trips";
 
 
 
@@ -144,3 +146,21 @@ export const logoutUser = async (): Promise<void> => {
     console.error("Error during logout:", error);
   }
 };
+
+
+//Get all users
+export const getAllUsers = async (limit: number, offset: number) => {
+   try { 
+     const {documents: users, total} = await database.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      [Query.limit(limit), Query.offset(offset)]
+     )
+
+     if(total === 0) return{users: [], total};
+      return{user, total};     
+    
+   } catch (error) {
+    console.log('Error fetching users')
+   }
+} 
