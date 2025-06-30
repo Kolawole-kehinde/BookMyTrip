@@ -6,14 +6,14 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
-// import * as Sentry from "@sentry/react-router"; // temporarily comment out to test
+
 import type { Route } from "./+types/root";
 import "./app.css";
-// import { registerLicense } from "@syncfusion/ej2-base"; // temporarily comment out
+import { registerLicense } from "@syncfusion/ej2-base";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
-  { rel: "icon", type: "favicon", href: "/assets/icons/BookMyTrip.png" },
+  { rel: "icon", type: "favicon", href: "/assets/icons/logo.svg" },
   {
     rel: "preconnect",
     href: "https://fonts.gstatic.com",
@@ -26,7 +26,7 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
-// registerLicense(import.meta.env.VITE_SYNCFUSION_LICENSE_KEY); // temporarily comment out
+registerLicense(import.meta.env.VITE_SYNCFUSION_LICENSE_KEY); // temporarily comment out
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (

@@ -21,7 +21,7 @@ export const NavItems = ({
     <section className="flex flex-col h-full px-4 py-6 bg-white">
       {/* Logo */}
       <Link to="/" className="flex items-center mb-6">
-        <img src="/assets/icons/BookMyTrip.png" alt="Logo" className="w-8 h-8" />
+        <img src="/assets/icons/logo.svg" alt="Logo" className="w-8 h-8" />
         <h1 className="ml-3 text-lg font-bold">BookMyTrip</h1>
       </Link>
 
