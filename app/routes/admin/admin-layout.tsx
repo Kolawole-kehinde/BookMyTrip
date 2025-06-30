@@ -1,21 +1,31 @@
-
+// routes/admin/admin-layout.tsx
 import { getExistingUser, storeUserData } from "appwrite/auth";
 import { account } from "appwrite/client";
 import { MobileSidebar, NavItems } from "components";
 import { Outlet, redirect } from "react-router";
-import {SidebarComponent} from '@syncfusion/ej2-react-navigations'
+import { SidebarComponent } from '@syncfusion/ej2-react-navigations';
 
+// Loader function
 export async function clientLoader() {
   try {
     const user = await account.get();
-    if (!user) return redirect("/sign-in");
 
-    let existingUser = await getExistingUser();
+    // If user is not logged in
+    if (!user?.$id) return redirect("/sign-in");
 
-    if (!existingUser) {
-      existingUser = await storeUserData(); 
+    const existingUser = await getExistingUser();
+
+    // If user is not an admin
+    if (existingUser?.status === 'user') {
+      return redirect("/");
     }
 
+    // If user not found in DB, store new data
+    if (!existingUser?.$id) {
+      return await storeUserData();
+    }
+
+    // Else return user data
     return existingUser;
   } catch (error) {
     console.error("clientLoader error:", error);
@@ -23,8 +33,7 @@ export async function clientLoader() {
   }
 }
 
-
-
+// Layout component
 const AdminLayout = () => {
   return (
     <div className="flex flex-col lg:flex-row h-screen w-full">
@@ -33,10 +42,7 @@ const AdminLayout = () => {
 
       {/* Desktop Sidebar */}
       <aside className="w-full max-w-[270px] hidden lg:block">
-        <SidebarComponent
-        width={270}
-        enableGestures={false}
-        >
+        <SidebarComponent width={270} enableGestures={false}>
           <NavItems />
         </SidebarComponent>
       </aside>

@@ -5,7 +5,7 @@ export const sidebarItems = [
   id: 1,
   icon: "/assets/icons/home.svg",
   label: "Dashboard",
-  href: "/", // or use "/" if you prefer
+  href: "dashboard", // or use "/" if you prefer
 },
   {
     id: 3,

@@ -1,7 +1,6 @@
 import { ID, OAuthProvider, Query } from "appwrite";
 import { account, appwriteConfig, database } from "./client";
 import { redirect } from "react-router";
-import { user } from "~/constants/trips";
 
 //Initiates login with Google using Appwrite OAuth2.
 export const loginWithGoogle = async () => {
