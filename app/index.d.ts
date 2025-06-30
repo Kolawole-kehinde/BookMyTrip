@@ -2,14 +2,15 @@ declare interface BaseUser {
   id: string;
   name: string;
   email: string;
-  dateJoined: string;
+  joinedAt: string; 
   imageUrl: string;
 }
 
 declare interface UserData extends BaseUser {
-  itineraryCreated: number | string;
-  status: "user" | "admin";
+  tripsCreated: number;
+  status: "user" | "admin" | string;
 }
+
 
 declare type User = BaseUser;
 

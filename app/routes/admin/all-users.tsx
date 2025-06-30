@@ -4,19 +4,27 @@ import {
   ColumnsDirective,
   GridComponent,
 } from "@syncfusion/ej2-react-grids";
-import { users } from "~/constants/trips";
-import { cn } from "lib/utils";
+import { cn, formatDate } from "lib/utils";
+import { getAllUsers } from "appwrite/auth";
+
+export const loader = async () => {
+  const { users, total } = await getAllUsers(10, 0);
+  return { users, total };
+};
 
 
-const AllUsers = () => {
+const AllUsers = ({ loaderData }: { loaderData: { users: any[]; total: number } }) => {
+
+  const { users } = loaderData;
+
   return (
     <main className="all-users wrapper">
       <Header
         title="Manage Users"
         description="Filter, sort, and access detailed user profiles"
       />
-      
-      <GridComponent dataSource={users} gridLines="None">
+
+      <GridComponent dataSource={users ?? []} gridLines="None">
         <ColumnsDirective>
           <ColumnDirective
             field="name"
@@ -41,16 +49,11 @@ const AllUsers = () => {
             textAlign="Left"
           />
           <ColumnDirective
-            field="dateJoined"
+            field="joinedAt"
             headerText="Date Joined"
-            width="120"
+            width="140"
             textAlign="Left"
-          />
-          <ColumnDirective
-            field="itineraryCreated"
-            headerText="Trip Created"
-            width="150"
-            textAlign="Left"
+            template={({joinedAt}: {joinedAt: string}) =>formatDate(joinedAt)}
           />
           <ColumnDirective
             field="status"

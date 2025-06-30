@@ -1,10 +1,7 @@
 import { ID, OAuthProvider, Query } from "appwrite";
 import { account, appwriteConfig, database } from "./client";
 import { redirect } from "react-router";
-import { Q } from "node_modules/react-router/dist/development/lib-C1JSsICm.mjs";
 import { user } from "~/constants/trips";
-
-
 
 //Initiates login with Google using Appwrite OAuth2.
 export const loginWithGoogle = async () => {
@@ -20,8 +17,8 @@ export const loginWithGoogle = async () => {
 };
 
 // Fetches the logged-in Appwrite user and their data from the database.
- // Redirects to /sign-in if not authenticated.
- 
+// Redirects to /sign-in if not authenticated.
+
 export const getUser = async (): Promise<any | null> => {
   try {
     const user = await account.get();
@@ -118,7 +115,7 @@ export const storeUserData = async (): Promise<any | null> => {
 };
 
 //Fetches existing user from Appwrite DB if present.
- 
+
 export const getExistingUser = async (): Promise<any | null> => {
   try {
     const user = await account.get();
@@ -138,7 +135,7 @@ export const getExistingUser = async (): Promise<any | null> => {
 };
 
 // Logs out the currently logged-in user.
- 
+
 export const logoutUser = async (): Promise<void> => {
   try {
     await account.deleteSession("current");
@@ -147,20 +144,22 @@ export const logoutUser = async (): Promise<void> => {
   }
 };
 
+// Get all users
 
-//Get all users
 export const getAllUsers = async (limit: number, offset: number) => {
-   try { 
-     const {documents: users, total} = await database.listDocuments(
+  try {
+    const { documents, total } = await database.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.userCollectionId,
       [Query.limit(limit), Query.offset(offset)]
-     )
+    );
 
-     if(total === 0) return{users: [], total};
-      return{user, total};     
+    if (total === 0) return { users: [], total };
     
-   } catch (error) {
-    console.log('Error fetching users')
-   }
-} 
+    return { users: documents, total };
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    return { users: [], total: 0 };
+  }
+};
+
