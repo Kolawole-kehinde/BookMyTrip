@@ -1,12 +1,19 @@
+import { Link } from "react-router";
+import {ButtonComponent} from '@syncfusion/ej2-react-buttons'
+
 interface HeaderProps {
   title: string;
   description: string;
+  ctaText?: string;
+  ctaUrl?: string
   variant?: "home" | "default";
 }
 
 const Header = ({
   title,
   description,
+  ctaText,
+  ctaUrl,
   variant = "default",
 }: HeaderProps) => {
   return (
@@ -30,7 +37,18 @@ const Header = ({
         >
           {description}
         </p>
-      </div>
+        </div>
+         {
+          ctaUrl && ctaText &&(
+            <Link to={ctaUrl}>
+              <ButtonComponent type="button" className="button-class !h-11 !w-full md:w-[240px]">
+                <img src="/assets/icons/plus.svg" alt="plus"  className="size-5"/>
+                 <span className="p-16-semibold text-white">{ctaText}</span>
+              </ButtonComponent>
+            </Link>
+          )
+         }
+      
     </header>
   );
 };

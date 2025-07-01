@@ -350,9 +350,7 @@
   .wrapper {
     @apply w-full max-w-7xl mx-auto px-4 lg:px-8;
   }
-  .wrapper-md {
-    @apply w-full max-w-3xl px-4 lg:px-8 mx-auto;
-  }
+
   .flex-center {
     @apply flex justify-center items-center;
   }
