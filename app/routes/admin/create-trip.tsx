@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Header } from 'components'
 import { ComboBoxComponent } from '@syncfusion/ej2-react-dropdowns'
 import type { Route } from './+types/create-trip'
+import { comboBoxItems, selectItems } from '~/constants'
+import { formatKey } from 'lib/utils'
 
 type Country = {
   name: string
@@ -11,9 +13,11 @@ type Country = {
 
 type TripFormData = {
   country: string
-  // add other fields if needed
+  duration: number
+  [key: string]: string | number
 }
 
+// ✅ Loader: get countries with flags
 export const loader = async (): Promise<Country[]> => {
   const res = await fetch(
     'https://restcountries.com/v3.1/all?fields=name,flags'
@@ -24,7 +28,7 @@ export const loader = async (): Promise<Country[]> => {
     return data.map((country: any) => ({
       name: country.name.common,
       flagUrl: country.flags?.png || '',
-      value: country.name.common,
+      value: country.name.common
     }))
   }
   return []
@@ -33,23 +37,27 @@ export const loader = async (): Promise<Country[]> => {
 const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
   const countries = loaderData as Country[]
 
+  const [formData, setFormData] = useState<TripFormData>({
+    country: '',
+    duration: 0
+  })
+
+  // ✅ handleChange keeps formData updated
   const handleChange = (key: keyof TripFormData, value: string | number) => {
-  
+    setFormData((prev) => ({ ...prev, [key]: value }))
   }
 
-  const countryData = countries?.map((c) => ({
+  // For country ComboBox
+  const countryData = countries.map((c) => ({
     text: c.name,
     value: c.value,
-    flagUrl: c.flagUrl,
+    flagUrl: c.flagUrl
   }))
 
+  // Item template for country (flag + name)
   const itemTemplate = (data: { text: string; flagUrl: string }) => (
     <div className="flex items-center gap-2">
-      <img
-        src={data.flagUrl}
-        alt={data.text}
-        className="w-6 h-4 object-cover"
-      />
+      <img src={data.flagUrl} alt={data.text} className="w-6 h-4 object-cover" />
       <span>{data.text}</span>
     </div>
   )
@@ -62,6 +70,7 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
       />
       <section className="mt-2.5 w-full max-w-3xl px-4 lg:px-8 mx-auto">
         <form className="trip-form" onSubmit={(e) => e.preventDefault()}>
+          {/* Country */}
           <div>
             <label htmlFor="country" className="block mb-1 font-medium">
               Country
@@ -81,7 +90,7 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
                 }
               }}
               filtering={(e: any) => {
-                const query = e.text.toLowerCase()
+                const query = e.text?.toLowerCase() || ''
                 const filtered = countries
                   .filter((country) =>
                     country.name.toLowerCase().includes(query)
@@ -89,25 +98,75 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
                   .map((country) => ({
                     text: country.name,
                     value: country.value,
-                    flagUrl: country.flagUrl,
+                    flagUrl: country.flagUrl
                   }))
                 e.updateData(filtered)
               }}
             />
           </div>
-           <div>
-            <label htmlFor="Duration">Duration</label>
-              <input
-               id='duration'
-               type='number'
-               name='duration'
-               placeholder='Enter a number of days'
-               className='form-input placeholder:text-gray-100'
-               onChange={(e) => handleChange('duration', Number(e.target.value))
-}
+
+          {/* Duration */}
+          <div>
+            <label htmlFor="duration" className="block mb-1 font-medium">
+              Duration
+            </label>
+            <input
+              id="duration"
+              type="number"
+              name="duration"
+              placeholder="Enter number of days"
+              className="form-input placeholder:text-gray-100"
+              onChange={(e) =>
+                handleChange('duration', Number(e.target.value))
+              }
+            />
+          </div>
+
+          {/* Other select items */}
+          {selectItems?.map((key) => (
+            <div key={key}>
+              <label htmlFor={key} className="block mb-1 font-medium">
+                {formatKey(key)}
+              </label>
+
+              <ComboBoxComponent
+                id={key}
+                dataSource={comboBoxItems[key]?.map((item) => ({
+                  text: item,
+                  value: item
+                }))}
+                fields={{ text: 'text', value: 'value' }}
+                placeholder={`Select ${formatKey(key)}`}
+                popupHeight="300px"
+                className="combo-box"
+                change={(e: { value?: string }) => {
+                  if (e.value) {
+                    handleChange(key, e.value)
+                  }
+                }}
+                // Add filtering only if this key === 'country' (unlikely here)
+                filtering={
+                  key === 'country'
+                    ? (e: any) => {
+                        const query = e.text?.toLowerCase() || ''
+                        const filtered = countries
+                          .filter((country) =>
+                            country.name.toLowerCase().includes(query)
+                          )
+                          .map((country) => ({
+                            text: country.name,
+                            value: country.value,
+                            flagUrl: country.flagUrl
+                          }))
+                        e.updateData(filtered)
+                      }
+                    : undefined
+                }
+                // Add itemTemplate only for country
+                itemTemplate={key === 'country' ? itemTemplate : undefined}
               />
-            
-           </div>
+            </div>
+          ))}
         </form>
       </section>
     </main>
