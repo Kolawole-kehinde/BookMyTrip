@@ -12,7 +12,7 @@ type Country = {
 
 // ✅ Loader
 export const loader = async () => {
-  const res = await fetch('https://restcountries.com/v3.1/all?fields=name,latlng,flag,maps');
+  const res = await fetch('https://restcountries.com/v3.1/all?fields=flag,name,latlng,maps')
   const data = await res.json();
 
   console.log("countries data:", data);
@@ -27,7 +27,6 @@ export const loader = async () => {
     : [];
 }
 
-// ✅ Component
 const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
      const handleSubmit = async () => {}
   const countries = loaderData as Country[];
