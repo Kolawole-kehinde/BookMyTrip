@@ -1,59 +1,98 @@
+import React, { useState } from 'react'
 import { Header } from 'components'
 import { ComboBoxComponent } from '@syncfusion/ej2-react-dropdowns'
-import type { Route } from './+types/create-trip';
+import type { Route } from './+types/create-trip'
 
-// ✅ Add type
 type Country = {
-  name: string;
-  Coordinate: number[];
-  value: string;
-  openstreetmap?: string;
-};
+  name: string
+  flagUrl: string
+  value: string
+}
 
-// ✅ Loader
-export const loader = async () => {
-  const res = await fetch('https://restcountries.com/v3.1/all?fields=flag,name,latlng,maps')
-  const data = await res.json();
+type TripFormData = {
+  country: string
+  // add other fields if needed
+}
 
-  console.log("countries data:", data);
+export const loader = async (): Promise<Country[]> => {
+  const res = await fetch(
+    'https://restcountries.com/v3.1/all?fields=name,flags'
+  )
+  const data = await res.json()
 
-  return Array.isArray(data)
-    ? data.map((country: any) => ({
-        name: country.flag + " " + country.name.common,
-        Coordinate: country.latlng,
-        value: country.name.common,
-        openstreetmap: country.maps?.openStreetMap,
+  if (Array.isArray(data)) {
+    return data.map((country: any) => ({
+      name: country.name.common,
+      flagUrl: country.flags?.png || '',
+      value: country.name.common,
     }))
-    : [];
+  }
+  return []
 }
 
 const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
-     const handleSubmit = async () => {}
-  const countries = loaderData as Country[];
+  const countries = loaderData as Country[]
 
-  const countryData = countries?.map((country) => ({
-     text: country.name,
-     value: country.value,
+  const handleChange = (key: keyof TripFormData, value: string | number) => {
+  
+  }
+
+  const countryData = countries?.map((c) => ({
+    text: c.name,
+    value: c.value,
+    flagUrl: c.flagUrl,
   }))
 
- 
+  const itemTemplate = (data: { text: string; flagUrl: string }) => (
+    <div className="flex items-center gap-2">
+      <img
+        src={data.flagUrl}
+        alt={data.text}
+        className="w-6 h-4 object-cover"
+      />
+      <span>{data.text}</span>
+    </div>
+  )
 
   return (
-    <main className='flex flex-col gap-10 pb-20 wrapper'>
+    <main className="flex flex-col gap-10 pb-20 wrapper">
       <Header
-        title='Add a New Trip'
-        description='View and Edit AI Generated travel plans'
+        title="Add a New Trip"
+        description="View and Edit AI Generated travel plans"
       />
-      <section className='mt-2.5 w-full max-w-3xl px-4 lg:px-8 mx-auto'>
-        <form className='trip-form' onSubmit={handleSubmit}>
+      <section className="mt-2.5 w-full max-w-3xl px-4 lg:px-8 mx-auto">
+        <form className="trip-form" onSubmit={(e) => e.preventDefault()}>
           <div>
-            <label htmlFor="country">Country</label>
+            <label htmlFor="country" className="block mb-1 font-medium">
+              Country
+            </label>
             <ComboBoxComponent
-              id='country'
+              id="country"
               dataSource={countryData}
               fields={{ text: 'text', value: 'value' }}
               placeholder="Select a country"
-              className='combo-box'
+              itemTemplate={itemTemplate}
+              popupHeight="300px"
+              allowFiltering
+              className="combo-box"
+              change={(e: { value?: string }) => {
+                if (e.value) {
+                  handleChange('country', e.value)
+                }
+              }}
+              filtering={(e: any) => {
+                const query = e.text.toLowerCase()
+                const filtered = countries
+                  .filter((country) =>
+                    country.name.toLowerCase().includes(query)
+                  )
+                  .map((country) => ({
+                    text: country.name,
+                    value: country.value,
+                    flagUrl: country.flagUrl,
+                  }))
+                e.updateData(filtered)
+              }}
             />
           </div>
         </form>
@@ -62,4 +101,4 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
   )
 }
 
-export default CreateTrip;
+export default CreateTrip
