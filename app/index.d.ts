@@ -108,9 +108,7 @@ declare interface DashboardStats {
   };
 }
 
-declare interface CreateTripResponse {
-  id?: string;
-}
+
 
 declare interface DestinationProps {
   containerClass?: string;

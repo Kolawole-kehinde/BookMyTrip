@@ -4,42 +4,49 @@ import { ComboBoxComponent } from '@syncfusion/ej2-react-dropdowns'
 import type { Route } from './+types/create-trip'
 import { comboBoxItems, selectItems } from '~/constants'
 import { cn, formatKey } from 'lib/utils'
-import { Coordinate, LayerDirective, LayersDirective, MapsComponent } from '@syncfusion/ej2-react-maps'
+import { LayerDirective, LayersDirective, MapsComponent } from '@syncfusion/ej2-react-maps'
 import { world_map } from '~/constants/world_map'
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import { account } from 'appwrite/client'
+import { useNavigate } from 'react-router'
 
-type Country = {
+interface Country {
   name: string
   flagUrl: string
   value: string
 }
 
-type TripFormData = {
+interface TripFormData {
   country: string
   duration: number
+  travelStyle: string
+  interest: string
+  budget: string
+  groupType: string
   [key: string]: string | number
 }
 
-// ✅ Loader: get countries with flags
+interface CreateTripResponse {
+  id?: string
+}
+
+// Loader: get countries with flags
 export const loader = async (): Promise<Country[]> => {
-  const res = await fetch(
-    'https://restcountries.com/v3.1/all?fields=name,flags'
-  )
+  const res = await fetch('https://restcountries.com/v3.1/all?fields=name,flags')
   const data = await res.json()
 
-  if (Array.isArray(data)) {
-    return data.map((country: any) => ({
-      name: country.name.common,
-      flagUrl: country.flags?.png || '',
-      value: country.name.common
-    }))
-  }
-  return []
+  return Array.isArray(data)
+    ? data.map((country: any) => ({
+        name: country.name.common,
+        flagUrl: country.flags?.png || '',
+        value: country.name.common
+      }))
+    : []
 }
 
 const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
   const countries = loaderData as Country[]
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState<TripFormData>({
     country: countries[0]?.name || '',
@@ -48,67 +55,86 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
     budget: '',
     groupType: '',
     duration: 0
-  });
-  const [error, setError] = useState<string | null>(null);
+  })
+  const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-       e.preventDefault()
-       setLoading(true);
-       if(
-        !formData.country ||
-        !formData.travelStyle ||
-        !formData.interest ||
-        !formData.budget ||
-        !formData.groupType
-       ){
-        setError('Please provide values for all fields')
-        setLoading(false)
-        return;
-       }
-       if (formData.duration < 1 || formData.duration > 10) {
-         setError('Duration must be between 1 and 10 days')
-        setLoading(false)
-        return;
-       }
-
-       const user = await account.get();
-       if (!user.$id) {
-         console.log('User not authenticated')
-         setLoading(false)
-         return;
-       }
-       try {
-         console.log('user', user);
-         console.log('formData', formData)
-       } catch (e) {
-        console.error('Error generating the trip', e)
-       }finally{
-        setLoading(false)
-       }
-  };
-
-  // ✅ handleChange keeps formData updated
   const handleChange = (key: keyof TripFormData, value: string | number) => {
-    setFormData({ ...formData, [key]: value})
+    setFormData(prev => ({ ...prev, [key]: value }))
   }
 
-  // For country ComboBox
-  const countryData = countries.map((c) => ({
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setLoading(true)
+    setError(null)
+
+    if (!formData.country || !formData.travelStyle || !formData.interest || !formData.budget || !formData.groupType) {
+      setError('Please provide values for all fields')
+      setLoading(false)
+      return
+    }
+    if (formData.duration < 1 || formData.duration > 10) {
+      setError('Duration must be between 1 and 10 days')
+      setLoading(false)
+      return
+    }
+
+    try {
+      const user = await account.get()
+      if (!user?.$id) {
+        setError('User not authenticated')
+        setLoading(false)
+        return
+      }
+
+      const response = await fetch('/api/create-trip', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          country: formData.country,
+          numberOfDays: formData.duration,
+          travelStyle: formData.travelStyle,
+          interests: formData.interest,
+          budget: formData.budget,
+          groupType: formData.groupType,
+          userId: user.$id
+        })
+      })
+
+      if (!response.ok) {
+        console.error('API returned error:', response.status)
+        setError('Failed to generate trip')
+        return
+      }
+
+      const result: CreateTripResponse = await response.json()
+      if (result?.id) {
+        navigate(`/trip/${result.id}`)
+      } else {
+        setError('Failed to generate trip')
+      }
+    } catch (e) {
+      console.error('Error generating the trip:', e)
+      setError('An unexpected error occurred')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const countryData = countries.map(c => ({
     text: c.name,
     value: c.value,
     flagUrl: c.flagUrl
   }))
 
   const mapData = [
-      {
-        country: formData.country,
-        color: '#EA382E',
-        Coordinates: countries.find((c: Country) => c.name === formData.country)?.coordinates || []
-      }
+    {
+      country: formData.country,
+      color: '#EA382E'
+      // optionally add coordinates if you fetch them
+    }
   ]
 
-  // Item template for country (flag + name)
   const itemTemplate = (data: { text: string; flagUrl: string }) => (
     <div className="flex items-center gap-2">
       <img src={data.flagUrl} alt={data.text} className="w-6 h-4 object-cover" />
@@ -118,17 +144,12 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
 
   return (
     <main className="flex flex-col gap-10 pb-20 wrapper">
-      <Header
-        title="Add a New Trip"
-        description="View and Edit AI Generated travel plans"
-      />
+      <Header title="Add a New Trip" description="View and Edit AI Generated travel plans" />
       <section className="mt-2.5 w-full max-w-3xl px-4 lg:px-8 mx-auto">
         <form className="trip-form" onSubmit={handleSubmit}>
           {/* Country */}
           <div>
-            <label htmlFor="country" className="block mb-1 font-medium">
-              Country
-            </label>
+            <label htmlFor="country" className="block mb-1 font-medium">Country</label>
             <ComboBoxComponent
               id="country"
               dataSource={countryData}
@@ -138,22 +159,12 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
               popupHeight="300px"
               allowFiltering
               className="combo-box"
-              change={(e: { value?: string }) => {
-                if (e.value) {
-                  handleChange('country', e.value)
-                }
-              }}
+              change={(e: { value?: string }) => e.value && handleChange('country', e.value)}
               filtering={(e: any) => {
                 const query = e.text?.toLowerCase() || ''
                 const filtered = countries
-                  .filter((country) =>
-                    country.name.toLowerCase().includes(query)
-                  )
-                  .map((country) => ({
-                    text: country.name,
-                    value: country.value,
-                    flagUrl: country.flagUrl
-                  }))
+                  .filter(c => c.name.toLowerCase().includes(query))
+                  .map(c => ({ text: c.name, value: c.value, flagUrl: c.flagUrl }))
                 e.updateData(filtered)
               }}
             />
@@ -161,103 +172,66 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
 
           {/* Duration */}
           <div>
-            <label htmlFor="duration" className="block mb-1 font-medium">
-              Duration
-            </label>
+            <label htmlFor="duration" className="block mb-1 font-medium">Duration</label>
             <input
               id="duration"
               type="number"
               name="duration"
               placeholder="Enter number of days"
               className="form-input placeholder:text-gray-100"
-              onChange={(e) =>
-                handleChange('duration', Number(e.target.value))
-              }
+              onChange={(e) => handleChange('duration', Number(e.target.value) || 0)}
             />
           </div>
 
           {/* Other select items */}
-          {selectItems?.map((key) => (
+          {selectItems.map(key => (
             <div key={key}>
-              <label htmlFor={key} className="block mb-1 font-medium">
-                {formatKey(key)}
-              </label>
-
+              <label htmlFor={key} className="block mb-1 font-medium">{formatKey(key)}</label>
               <ComboBoxComponent
                 id={key}
-                dataSource={comboBoxItems[key]?.map((item) => ({
-                  text: item,
-                  value: item
-                }))}
+                dataSource={comboBoxItems[key].map(item => ({ text: item, value: item }))}
                 fields={{ text: 'text', value: 'value' }}
                 placeholder={`Select ${formatKey(key)}`}
                 popupHeight="300px"
                 className="combo-box"
-                change={(e: { value?: string }) => {
-                  if (e.value) {
-                    handleChange(key, e.value)
-                  }
+                allowFiltering
+                change={(e: { value?: string }) => e.value && handleChange(key, e.value)}
+                filtering={(e: any) => {
+                  const query = e.text?.toLowerCase() || ''
+                  e.updateData(comboBoxItems[key]
+                    .filter(item => item.toLowerCase().includes(query))
+                    .map(item => ({ text: item, value: item })))
                 }}
-                // Add filtering only if this key === 'country' (unlikely here)
-                filtering={
-                  key === 'country'
-                    ? (e: any) => {
-                        const query = e.text?.toLowerCase() || ''
-                        const filtered = countries
-                          .filter((country) =>
-                            country.name.toLowerCase().includes(query)
-                          )
-                          .map((country) => ({
-                            text: country.name,
-                            value: country.value,
-                            flagUrl: country.flagUrl
-                          }))
-                        e.updateData(filtered)
-                      }
-                    : undefined
-                }
-                // Add itemTemplate only for country
-                itemTemplate={key === 'country' ? itemTemplate : undefined}
               />
             </div>
           ))}
-          {/* World Map */}
+
+          {/* World map */}
           <div>
-             <label htmlFor="location">
-               Location on the world map
-             </label>
-              <MapsComponent>
-                    <LayersDirective>
-                         <LayerDirective
-                         dataSource={mapData}
-                         shapeData={world_map}
-                         shapePropertyPath='name'
-                         shapeDataPath='country'
-                         shapeSettings={{colorValuePath: 'color', fill: '#E5E5E5'}}
-                         />
-                    </LayersDirective>
-              </MapsComponent>
+            <label htmlFor="location">Location on the world map</label>
+            <MapsComponent>
+              <LayersDirective>
+                <LayerDirective
+                  shapeData={world_map}
+                  dataSource={mapData}
+                  shapePropertyPath="name"
+                  shapeDataPath="country"
+                  shapeSettings={{ colorValuePath: 'color', fill: '#E5E5E5' }}
+                />
+              </LayersDirective>
+            </MapsComponent>
           </div>
 
-          <div className='bg-gray-200 h-px w-full'/>
-             {
-              error && (
-                <div className='error'>
-                    <p>{error}</p>
-                </div>
-              )}
+          <div className='bg-gray-200 h-px w-full' />
 
-              <footer className='px-6 w-full'>
-                 <ButtonComponent type='submit'
-                 className='button-class !h-12 !w-full'
-                 disabled={loading}
-                 >
-                  <img src={`/assets/icons/${loading ? 'loader.svg' : 'magic-star.svg'}`}  className={cn('size-5', {'animate-spin': loading})}/>
-                      <span className='p-16-semibold text-white'>
-                         {loading ? 'Generating' : 'Gnerate Trip' }
-                      </span>
-                 </ButtonComponent>
-              </footer>
+          {error && <div className='error'><p>{error}</p></div>}
+
+          <footer className='px-6 w-full'>
+            <ButtonComponent type='submit' className='button-class !h-12 !w-full' disabled={loading}>
+              <img src={`/assets/icons/${loading ? 'loader.svg' : 'magic-star.svg'}`} className={cn('size-5', { 'animate-spin': loading })} />
+              <span className='p-16-semibold text-white'>{loading ? 'Generating...' : 'Generate Trip'}</span>
+            </ButtonComponent>
+          </footer>
         </form>
       </section>
     </main>
