@@ -7,6 +7,7 @@ import { cn, formatKey } from 'lib/utils'
 import { Coordinate, LayerDirective, LayersDirective, MapsComponent } from '@syncfusion/ej2-react-maps'
 import { world_map } from '~/constants/world_map'
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
+import { account } from 'appwrite/client'
 
 type Country = {
   name: string
@@ -64,6 +65,26 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
         setError('Please provide values for all fields')
         setLoading(false)
         return;
+       }
+       if (formData.duration < 1 || formData.duration > 10) {
+         setError('Duration must be between 1 and 10 days')
+        setLoading(false)
+        return;
+       }
+
+       const user = await account.get();
+       if (!user.$id) {
+         console.log('User not authenticated')
+         setLoading(false)
+         return;
+       }
+       try {
+         console.log('user', user);
+         console.log('formData', formData)
+       } catch (e) {
+        console.error('Error generating the trip', e)
+       }finally{
+        setLoading(false)
        }
   };
 
