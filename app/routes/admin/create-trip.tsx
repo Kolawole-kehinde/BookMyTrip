@@ -4,6 +4,8 @@ import { ComboBoxComponent } from '@syncfusion/ej2-react-dropdowns'
 import type { Route } from './+types/create-trip'
 import { comboBoxItems, selectItems } from '~/constants'
 import { formatKey } from 'lib/utils'
+import { Coordinate, LayerDirective, LayersDirective, MapsComponent } from '@syncfusion/ej2-react-maps'
+import { world_map } from '~/constants/world_map'
 
 type Country = {
   name: string
@@ -38,7 +40,11 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
   const countries = loaderData as Country[]
 
   const [formData, setFormData] = useState<TripFormData>({
-    country: '',
+    country: countries[0]?.name || '',
+    travelStyle: '',
+    interest: '',
+    budget: '',
+    groupType: '',
     duration: 0
   })
 
@@ -53,6 +59,14 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
     value: c.value,
     flagUrl: c.flagUrl
   }))
+
+  const mapData = [
+      {
+        country: formData.country,
+        coloe: '#EA382E',
+        Coordinates: countries.find((c: Country) => c.name === formData.country)?.coordinates || []
+      }
+  ]
 
   // Item template for country (flag + name)
   const itemTemplate = (data: { text: string; flagUrl: string }) => (
@@ -167,6 +181,20 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
               />
             </div>
           ))}
+
+          <div>
+             <label htmlFor="location">
+               Location on the world map
+             </label>
+              <MapsComponent>
+                    <LayersDirective>
+                         <LayerDirective
+                         dataSource={mapData}
+                         shapeData={world_map}
+                         />
+                    </LayersDirective>
+              </MapsComponent>
+          </div>
         </form>
       </section>
     </main>
