@@ -50,7 +50,7 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
 
   // ✅ handleChange keeps formData updated
   const handleChange = (key: keyof TripFormData, value: string | number) => {
-    setFormData((prev) => ({ ...prev, [key]: value }))
+    setFormData({ ...formData, [key]: value})
   }
 
   // For country ComboBox
@@ -63,7 +63,7 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
   const mapData = [
       {
         country: formData.country,
-        coloe: '#EA382E',
+        color: '#EA382E',
         Coordinates: countries.find((c: Country) => c.name === formData.country)?.coordinates || []
       }
   ]
@@ -191,6 +191,9 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
                          <LayerDirective
                          dataSource={mapData}
                          shapeData={world_map}
+                         shapePropertyPath='name'
+                         shapeDataPath='country'
+                         shapeSettings={{colorValuePath: 'color', fill: '#E5E5E5'}}
                          />
                     </LayersDirective>
               </MapsComponent>
