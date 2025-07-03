@@ -6,6 +6,7 @@ import { comboBoxItems, selectItems } from '~/constants'
 import { formatKey } from 'lib/utils'
 import { Coordinate, LayerDirective, LayersDirective, MapsComponent } from '@syncfusion/ej2-react-maps'
 import { world_map } from '~/constants/world_map'
+import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 
 type Country = {
   name: string
@@ -46,7 +47,11 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
     budget: '',
     groupType: '',
     duration: 0
-  })
+  });
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false)
+
+  con
 
   // ✅ handleChange keeps formData updated
   const handleChange = (key: keyof TripFormData, value: string | number) => {
@@ -181,7 +186,7 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
               />
             </div>
           ))}
-
+          {/* World Map */}
           <div>
              <label htmlFor="location">
                Location on the world map
@@ -198,6 +203,26 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
                     </LayersDirective>
               </MapsComponent>
           </div>
+
+          <div className='bg-gray-200 h-px w-full'/>
+             {
+              error && (
+                <div className='error'>
+                    <p>{error}</p>
+                </div>
+              )}
+
+              <footer className='px-6 w-full'>
+                 <ButtonComponent type='submit'
+                 className='button-class !h-12 !w-full'
+                 disabled={loading}
+                 >
+                  <img src={`/assets/icons/${loading ? 'loader.svg' : 'magic-star.svg'}`} />
+                      <span className='p-16-semibold text-white'>
+                         {loading ? 'Generating' : 'Gnerate Trip' }
+                      </span>
+                 </ButtonComponent>
+              </footer>
         </form>
       </section>
     </main>
