@@ -1,6 +1,6 @@
 import { Query } from "appwrite"
 import { appwriteConfig, database } from "./client"
-import { totalmem } from "os";
+
 
 
 export const gettAllTrips = async (limit: number, offset: number) => {

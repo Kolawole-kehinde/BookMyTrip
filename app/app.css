@@ -75,15 +75,6 @@
   .all-users {
     @apply w-full min-h-screen  flex flex-col gap-10;
   }
-  .info-pill {
-    @apply flex items-center gap-1.5;
-    img {
-      @apply size-5;
-    }
-    figcaption {
-      @apply text-sm md:text-lg font-normal truncate text-gray-100;
-    }
-  }
 
   .trip {
     @apply flex flex-col gap-10 pb-20;

@@ -136,10 +136,6 @@ declare interface TripsInterest {
   interest: string;
 }
 
-declare interface InfoPillProps {
-  text: string;
-  image: string;
-}
 
 declare interface TripFormData {
   country: string;
