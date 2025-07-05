@@ -160,9 +160,7 @@
         }
       }
 
-      .gallery {
-        @apply grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-7 mt-1;
-      }
+     
     }
 
     .visit {
