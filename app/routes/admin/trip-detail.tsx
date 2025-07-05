@@ -38,7 +38,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 const TripDetail = ({ loaderData }: Route.ComponentProps) => {
   const imageUrls = loaderData?.trip?.imageUrls || [];
-  const tripData = parseTripData(loaderData?.trip?.tripDetail);
+  const tripData = parseTripData(loaderData?.trip?.tripDetails);
   const {
     name,
     duration,
@@ -209,7 +209,7 @@ const TripDetail = ({ loaderData }: Route.ComponentProps) => {
 
        <section className="flex flex-col gap-6 mt-6">
               <h2 className="p-24-semibold text-dark-100">Popular Trips</h2>
-                <div className="trip-grid">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-7">
                     {
                       allTrips?.map((trip) => (
                          <TripCard

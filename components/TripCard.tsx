@@ -23,8 +23,6 @@ const TripCard = ({ id, name, imageUrls, location, tags, price }: TripCardProps)
       ? `/travel/${id}`
       : `/trips/${id}`;
 
-      console.log('tags:', tags);
-
   return (
     <div className="shadow-300 bg-white rounded-[20px] flex-col w-full relative mb-6">
       <Link to={basePath} aria-label={`View details for trip: ${name}`} className="block w-full h-full">

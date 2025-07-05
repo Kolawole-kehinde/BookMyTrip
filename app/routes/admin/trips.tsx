@@ -41,8 +41,8 @@ const Trips = ({ loaderData }: Route.ComponentProps) => {
           />
 
           <section>
-              <h1 className="p-24-semibold text-dark-100">Manage Create Trips</h1>
-             <div className="trip-grid">
+              <h1 className="p-24-semibold text-dark-100 mb-4">Manage Create Trips</h1>
+             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-7">
                     {
                       trips?.map((trip) => (
                          <TripCard
