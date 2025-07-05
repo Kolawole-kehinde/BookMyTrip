@@ -46,6 +46,12 @@ const TripDetail = ({ loaderData }: Route.ComponentProps) => {
     { text: budget, bg: "!bg-success-50 !text-success-700" },
     { text: interests, bg: "!bg-navy-50 !text-navy-500" },
   ];
+  const vistTimeAndWeatherInfo = [
+      {title: 'Best Iime to Visit', items: bestTimeToVisit},
+      {title: 'Weather', items: weatherInfo}
+  ]
+     
+
   return (
     <main className="trip-detail wrapper">
       <Header
@@ -160,6 +166,25 @@ const TripDetail = ({ loaderData }: Route.ComponentProps) => {
             </li>
           ))}
         </ul>
+
+           {
+             vistTimeAndWeatherInfo?.map((section) => (
+                <section key={section.title} className="visit mt-6">
+                   <div className="">
+                       <h3 className="font-semibold">{section.title}</h3>
+                       <ul>
+                         {
+                          section.items?.map((item) => (
+                              <li key={item}>
+                                  <p className="flex-grow">{item}</p>
+                              </li>
+                          ))
+                         }
+                       </ul>
+                   </div>
+                </section>
+             ))
+           }
       </section>
     </main>
   );
