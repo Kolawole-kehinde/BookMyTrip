@@ -1,13 +1,14 @@
-import { getTripById } from "appwrite/trips";
+import { gettAllTrips, getTripById } from "appwrite/trips";
 import type { LoaderFunctionArgs } from "react-router";
 import type { Route } from "./+types/trip-detail";
 import { cn, parseTripData } from "lib/utils";
-import { Header, InfoPill } from "components";
+import { Header, InfoPill, TripCard } from "components";
 import {
   ChipDirective,
   ChipListComponent,
   ChipsDirective,
 } from "@syncfusion/ej2-react-buttons";
+import { allTrips } from "~/constants/trips";
 
 // Utility function to get the first word of a string
 function getFirstWord(input: string = ""): string {
@@ -19,12 +20,25 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { tripId } = params;
   if (!tripId) throw new Error("Trip ID is required");
 
-  return await getTripById(tripId);
+  const [trip, trips] = await Promise.all([
+     getTripById(tripId),
+ gettAllTrips( 4, 0),
+  ]);
+  
+
+  return {
+     trip,
+     allTrips: trips.allTrips?.map(({$id, tripDetails, imageUrls}) => ({
+         id: $id,
+         ...parseTripData(tripDetails),
+         imageUrls: imageUrls ?? []
+     }))
+  }
 };
 
 const TripDetail = ({ loaderData }: Route.ComponentProps) => {
-  const imageUrls = loaderData?.imageUrls || [];
-  const tripData = parseTripData(loaderData?.tripDetail);
+  const imageUrls = loaderData?.trip?.imageUrls || [];
+  const tripData = parseTripData(loaderData?.trip?.tripDetail);
   const {
     name,
     duration,
@@ -40,12 +54,15 @@ const TripDetail = ({ loaderData }: Route.ComponentProps) => {
     country,
   } = tripData || {};
 
+   const allTrips = loaderData.allTrips as Trip[] | [];
+
   const pillItems = [
     { text: travelStyle, bg: "!bg-pink-50 !text-pink-500" },
     { text: groupType, bg: "!bg-primary-50 !text-primary-500" },
     { text: budget, bg: "!bg-success-50 !text-success-700" },
     { text: interests, bg: "!bg-navy-50 !text-navy-500" },
   ];
+
   const vistTimeAndWeatherInfo = [
       {title: 'Best Iime to Visit', items: bestTimeToVisit},
       {title: 'Weather', items: weatherInfo}
@@ -172,11 +189,11 @@ const TripDetail = ({ loaderData }: Route.ComponentProps) => {
                 <section key={section.title} className="visit mt-6">
                    <div className="">
                        <h3 className="font-semibold">{section.title}</h3>
-                       <ul>
+                       <ul className="space-y-4">
                          {
                           section.items?.map((item) => (
-                              <li key={item}>
-                                  <p className="flex-grow">{item}</p>
+                              <li key={item} className="">
+                                  <p className="flex-grow ">{item}</p>
                               </li>
                           ))
                          }
@@ -185,6 +202,26 @@ const TripDetail = ({ loaderData }: Route.ComponentProps) => {
                 </section>
              ))
            }
+
+          <section className="flex flex-col gap-6 mt-6">
+              <h2 className="p-24-semibold text-dark-100">Popular Trips</h2>
+               <div className="trip-grid">
+                    {
+                      allTrips?.map(({id, name, imageUrls, itinerary, interests, travelStyle, estimatedPrice,}) => (
+                         <TripCard
+                           id={id}
+                           key={id}
+                           name={name}
+                           location={itinerary?.[0].location ?? ''}
+                           imageUrls={imageUrls[0]}
+                           tags={['Culture', 'Luxury']}
+                           price={estimatedPrice}
+                         />
+                      ))
+                    }
+               </div>
+          </section>
+
       </section>
     </main>
   );
