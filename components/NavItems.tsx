@@ -20,10 +20,10 @@ export const NavItems = ({
   return (
     <section className="flex flex-col h-full px-4 py-6 bg-white">
       {/* Logo */}
-      <Link to="/" className="flex items-center mb-6">
+      {/* <Link to="/" className="flex items-center mb-6">
         <img src="/assets/icons/logo.svg" alt="Logo" className="w-8 h-8" />
         <h1 className="ml-3 text-lg font-bold">BookMyTrip</h1>
-      </Link>
+      </Link> */}
 
       {/* Navigation */}
       <nav className="container flex flex-col gap-2">
@@ -51,7 +51,7 @@ export const NavItems = ({
       </nav>
 
       {/* User Footer */}
-      <footer className="flex items-center mt-auto gap-3 border-t border-gray-200 pt-4">
+      <footer className="flex items-center mt-auto  gap-3 border-t border-gray-200 pt-4">
         <img
           src={user?.imageUrl || "./assets/images/david.webp"}
           alt={user?.name || "Khennycool"}

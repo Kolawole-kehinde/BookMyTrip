@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { appwriteConfig, database } from "appwrite/client";
 import { parseMarkdownToJson } from "lib/utils";
 import { type ActionFunctionArgs } from "react-router";
-import { ID } from "appwrite"; // make sure to import ID
+import { ID } from "appwrite";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const {
@@ -103,8 +103,8 @@ Return the itinerary and lowest estimated price in a clean, non-markdown JSON fo
       appwriteConfig.tripCollectionId,
       ID.unique(),
       {
-        tripDetail: JSON.stringify(trip),
-        imageUrls: imageUrls, // ✅ pass array directly, not JSON.stringify
+        tripDetails: JSON.stringify(trip),
+        imageUrls: imageUrls,
         createdAt: new Date().toISOString(),
       }
     );
