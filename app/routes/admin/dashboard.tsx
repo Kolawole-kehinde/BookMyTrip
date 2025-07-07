@@ -1,13 +1,39 @@
 import { StatsCard, TripCard } from "components";
 import Header from "components/Header";
-import { allTrips, dashboardStats, user } from "~/constants/trips";
+import { allTrips } from "~/constants/trips";
+import type { Route } from "./+types/dashboard";
+import { getAllUsers } from "appwrite/auth";
+import { getUsersAndTripsStats } from "appwrite/dashboard";
 
-const { totalUsers, userJoined, tripCreated, userRole, totalTrips } = dashboardStats;
+// loader function: always returns a complete safe object
+export const clientLoader = async () => {
+  const [user, dashboardStatsFromAPI] = await Promise.all([
+    getAllUsers(),
+    getUsersAndTripsStats()
+  ]);
 
+  const dashboardStats = {
+    totalUsers: dashboardStatsFromAPI?.totalUsers ?? 0,
+    totalTrips: dashboardStatsFromAPI?.totalTrips ?? 0,
+    userJoined: dashboardStatsFromAPI?.userJoined ?? { currentMonth: 0, lastMonthCount: 0 },
+    tripCreated: dashboardStatsFromAPI?.tripCreated ?? { currentMonth: 0, lastMonthCount: 0 },
+    userRole: dashboardStatsFromAPI?.userRole ?? { total: 0, currentMonth: 0, lastMonthCount: 0 },
+  };
 
-const Dashboard = () => {
-  // const data = useLoaderData() ?? {};
-  // const user = data.user ?? null;
+  return { user, dashboardStats };
+};
+
+const Dashboard = ({ loaderData }: Route.ComponentProps) => {
+  const user = loaderData.user as User | null;
+
+  // destructure safely
+  const {
+    totalUsers,
+    totalTrips,
+    userJoined,
+    tripCreated,
+    userRole
+  } = loaderData.dashboardStats;
 
   const welcomeTitle = `Welcome back, ${user?.name ?? "Guest"} 👋`;
 
@@ -35,7 +61,7 @@ const Dashboard = () => {
           />
           <StatsCard
             headerTitle="Active Users Today"
-            total={totalUsers}
+            total={userRole.total}
             currentMonthCount={userRole.currentMonth}
             lastMonthCount={userRole.lastMonthCount}
           />

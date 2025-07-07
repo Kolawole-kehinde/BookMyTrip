@@ -38,14 +38,13 @@ import { formatDate } from "lib/utils";
     },
     ];
     export const user = {name: "Khennycool"}
-    export const dashboardStats ={
-        totalUsers: 15000,
-        userJoined: {currentMonth: 218, lastMonthCount: 176},
-        totalTrips: 3210,
-        tripCreated: {currentMonth: 150, lastMonthCount: 250},
-        userRole: {total: 62, currentMonth: 25, lastMonthCount: 15},
-    }
-
+    // export const dashboardStats = {
+    //   totalUsers: dashboardStatsFromAPI?.totalUsers ?? 0,
+    //   totalTrips: dashboardStatsFromAPI?.totalTrips ?? 0,
+    //   userJoined: dashboardStatsFromAPI?.userJoined ?? { currentMonth: 0, lastMonthCount: 0 },
+    //   tripCreated: dashboardStatsFromAPI?.tripCreated ?? { currentMonth: 0, lastMonthCount: 0 },
+    //   userRole: dashboardStatsFromAPI?.userRole ?? { total: 0, currentMonth: 0, lastMonthCount: 0 },
+    // };
     export const users = [
     {
       id: 1,
