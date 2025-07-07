@@ -2,13 +2,13 @@ import { StatsCard, TripCard } from "components";
 import Header from "components/Header";
 import { allTrips } from "~/constants/trips";
 import type { Route } from "./+types/dashboard";
-import { getAllUsers } from "appwrite/auth";
+import { getUser } from "appwrite/auth";
 import { getUsersAndTripsStats } from "appwrite/dashboard";
 
 // loader function: always returns a complete safe object
 export const clientLoader = async () => {
-  const [user, dashboardStatsFromAPI] = await Promise.all([
-    getAllUsers(),
+  const [currentUser, dashboardStatsFromAPI] = await Promise.all([
+    getUser(),
     getUsersAndTripsStats()
   ]);
 
@@ -20,8 +20,9 @@ export const clientLoader = async () => {
     userRole: dashboardStatsFromAPI?.userRole ?? { total: 0, currentMonth: 0, lastMonthCount: 0 },
   };
 
-  return { user, dashboardStats };
+  return { user: currentUser, dashboardStats };
 };
+
 
 const Dashboard = ({ loaderData }: Route.ComponentProps) => {
   const user = loaderData.user as User | null;
