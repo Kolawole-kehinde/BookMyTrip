@@ -1,40 +1,80 @@
 import { StatsCard, TripCard } from "components";
 import Header from "components/Header";
-import { allTrips } from "~/constants/trips";
 import type { Route } from "./+types/dashboard";
-import { getUser } from "appwrite/auth";
-import { getUsersAndTripsStats } from "appwrite/dashboard";
+import { getAllUsers, getUser } from "appwrite/auth";
+import {
+  getTripsByTravelStyle,
+  getUserGrowthPerDay,
+  getUsersAndTripsStats,
+} from "appwrite/dashboard";
+import { gettAllTrips } from "appwrite/trips";
+import { parseTripData } from "lib/utils";
 
-// loader function: always returns a complete safe object
+// loader function
 export const clientLoader = async () => {
-  const [currentUser, dashboardStatsFromAPI] = await Promise.all([
+  const [
+    currentUser,
+    dashboardStatsFromAPI,
+    trips,
+    userGrowth,
+    tripsByTravelStyle,
+    allUsers,
+  ] = await Promise.all([
     getUser(),
-    getUsersAndTripsStats()
+    getUsersAndTripsStats(),
+    gettAllTrips(4, 0),
+    getUserGrowthPerDay(),
+    getTripsByTravelStyle(),
+    getAllUsers(4, 0),
   ]);
 
-  const dashboardStats = {
-    totalUsers: dashboardStatsFromAPI?.totalUsers ?? 0,
-    totalTrips: dashboardStatsFromAPI?.totalTrips ?? 0,
-    userJoined: dashboardStatsFromAPI?.userJoined ?? { currentMonth: 0, lastMonthCount: 0 },
-    tripCreated: dashboardStatsFromAPI?.tripCreated ?? { currentMonth: 0, lastMonthCount: 0 },
-    userRole: dashboardStatsFromAPI?.userRole ?? { total: 0, currentMonth: 0, lastMonthCount: 0 },
+  // Fallback if API fails
+  const fallbackStats = {
+    totalUsers: 15000,
+    userJoined: { currentMonth: 218, lastMonthCount: 176 },
+    totalTrips: 3210,
+    tripCreated: { currentMonth: 150, lastMonthCount: 250 },
+    userRole: { total: 62, currentMonth: 25, lastMonthCount: 15 },
   };
 
-  return { user: currentUser, dashboardStats };
-};
+  const dashboardStats = dashboardStatsFromAPI ?? fallbackStats;
 
+  const allTrips = trips.allTrips?.map(({ $id, tripDetails, imageUrls }) => ({
+    id: $id,
+    ...parseTripData(tripDetails),
+    imageUrls: imageUrls ?? [],
+  }));
+
+  const mappedUsers: UsersItineraryCount[] = allUsers.users?.map((user) => ({
+    imageUrl: user.imageUrl,
+    name: user.name,
+    count: user.itinerary,
+  }));
+
+  return {
+    user: currentUser,
+    dashboardStats,
+    allTrips,
+    userGrowth,
+    tripsByTravelStyle,
+    allUsers: mappedUsers,
+  };
+};
 
 const Dashboard = ({ loaderData }: Route.ComponentProps) => {
   const user = loaderData.user as User | null;
 
-  // destructure safely
+  const { dashboardStats, allTrips, userGrowth, tripsByTravelStyle, allUsers } =
+    loaderData;
+
+  // Safe destructuring with defaults
   const {
-    totalUsers,
-    totalTrips,
-    userJoined,
-    tripCreated,
-    userRole
-  } = loaderData.dashboardStats;
+    totalUsers = 0,
+    userJoined = { currentMonth: 0, lastMonthCount: 0 },
+    totalTrips = 0,
+    tripCreated = { currentMonth: 0, lastMonthCount: 0 },
+    userRole = { total: 0, currentMonth: 0, lastMonthCount: 0 },
+  } = dashboardStats ?? {};
 
   const welcomeTitle = `Welcome back, ${user?.name ?? "Guest"} 👋`;
 
@@ -73,20 +113,17 @@ const Dashboard = ({ loaderData }: Route.ComponentProps) => {
       <section className="mt-5">
         <h1 className="text-xl font-semibold mb-4 font-figtree">Trips</h1>
         <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-          {allTrips.slice(0, 4).map(
-            ({ id, name, imageUrls, itinerary, tags, travelStyle, estimatedPrice }) => (
-              <TripCard
-                key={id}
-                id={id.toString()}
-                name={name}
-                imageUrls={imageUrls?.[0] ?? "/assets/placeholder.png"}
-                location={itinerary?.[0]?.location ?? "Unknown"}
-                tags={tags}
-                travelStyle={travelStyle}
-                price={estimatedPrice}
-              />
-            )
-          )}
+          {allTrips.map((trip) => (
+            <TripCard
+              id={trip.id}
+              key={trip.id}
+              name={trip.name!}
+              location={trip.itinerary?.[0].location ?? ""}
+              imageUrls={trip.imageUrls[0]}
+              tags={[trip.interests!, trip.travelStyle!]}
+              price={trip.estimatedPrice!}
+            />
+          ))}
         </div>
       </section>
     </div>
