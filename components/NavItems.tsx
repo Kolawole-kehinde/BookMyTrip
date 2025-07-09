@@ -1,7 +1,6 @@
-// NavItems.tsx
 
-import { logoutUser } from "appwrite/auth";
-import { Link, NavLink, useLoaderData, useNavigate } from "react-router";
+
+import {NavLink, useLoaderData } from "react-router";
 import { sidebarItems } from "~/constants";
 
 export const NavItems = ({
@@ -10,12 +9,6 @@ export const NavItems = ({
   handleItemClick?: () => void;
 }) => {
   const user = useLoaderData();
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    await logoutUser();
-    navigate("/sign-in");
-  };
 
   return (
     <section className="flex flex-col h-full px-4 py-6 bg-white">
@@ -62,13 +55,6 @@ export const NavItems = ({
           <h2 className="text-sm font-semibold truncate">{user?.name}</h2>
           <p className="text-[10px] text-gray-500 truncate">{user?.email}</p>
         </div>
-        <button onClick={handleLogout} aria-label="Logout" className="p-1">
-          <img
-            src="/assets/icons/logout.svg"
-            alt="Logout"
-            className="size-4"
-          />
-        </button>
       </footer>
     </section>
   );
