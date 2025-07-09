@@ -9,7 +9,7 @@ import {
 } from "appwrite/dashboard";
 import { gettAllTrips } from "appwrite/trips";
 import { parseTripData } from "lib/utils";
-import { Category, ChartComponent, ColumnSeries, DataLabel, Inject, SplineAreaSeries, Tooltip} from "@syncfusion/ej2-react-charts";
+import { Category, ChartComponent, ColumnSeries, DataLabel, Inject, SeriesCollectionDirective, SeriesDirective, SplineAreaSeries, Tooltip} from "@syncfusion/ej2-react-charts";
 import { userXAxis, useryAxis } from "~/constants";
 
 // loader function
@@ -137,6 +137,17 @@ const Dashboard = ({ loaderData }: Route.ComponentProps) => {
           tooltip={{enable: true}}
            >
               <Inject  services={[ColumnSeries, SplineAreaSeries, Category, DataLabel, Tooltip]} />
+               <SeriesCollectionDirective>
+                   <SeriesDirective
+                   dataSource={userGrowth}
+                   xName="day"
+                   yName="count"
+                   type="Column"
+                   name="Column"
+                   columnWidth={0.3}
+                   cornerRadius={{topLeft: 10, topRight: 10}}
+                   />
+               </SeriesCollectionDirective>
            </ChartComponent>
             
         </section>
