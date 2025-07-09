@@ -12,6 +12,8 @@ import { parseTripData } from "lib/utils";
 import {
   Category,
   ChartComponent,
+  ColumnDirective,
+  ColumnsDirective,
   ColumnSeries,
   DataLabel,
   Inject,
@@ -21,6 +23,7 @@ import {
   Tooltip,
 } from "@syncfusion/ej2-react-charts";
 import { tripXAxis, tripyAxis, userXAxis, useryAxis } from "~/constants";
+import { GridComponent } from "@syncfusion/ej2-react-grids";
 
 // loader function
 export const clientLoader = async () => {
@@ -79,6 +82,28 @@ const Dashboard = ({ loaderData }: Route.ComponentProps) => {
   const { dashboardStats, allTrips, userGrowth, tripsByTravelStyle, allUsers } =
     loaderData;
 
+       const trips = allTrips.map((trip) => ({
+        imageUrl: trip.imageUrls[0],
+        name: trip.name,
+        interest: trip.interests,
+    }))
+
+    const usersAndTrips = [
+        {
+            title: 'Latest user signups',
+            dataSource: allUsers,
+            field: 'count',
+            headerText: 'Trips created'
+        },
+        {
+            title: 'Trips based on interests',
+            dataSource: trips,
+            field: 'interest',
+            headerText: 'Interests'
+        }
+    ]
+
+
   // Safe destructuring with defaults
   const {
     totalUsers = 0,
@@ -91,7 +116,7 @@ const Dashboard = ({ loaderData }: Route.ComponentProps) => {
   const welcomeTitle = `Welcome back, ${user?.name ?? "Guest"} 👋`;
 
   return (
-    <div className="wrapper">
+    <main className="wrapper">
       <Header
         title={welcomeTitle}
         description="Track activity, trends, and popular destinations in real time"
@@ -195,7 +220,40 @@ const Dashboard = ({ loaderData }: Route.ComponentProps) => {
                 </ChartComponent>
             </section>
 
-    </div>
+             <section className="user-trip wrapper">
+                {usersAndTrips.map(({ title, dataSource, field, headerText}, i) => (
+                    <div key={i} className="flex flex-col gap-5">
+                        <h3 className="p-20-semibold text-dark-100">{title}</h3>
+
+                        <GridComponent dataSource={dataSource} gridLines="None">
+                            <ColumnsDirective>
+                                <ColumnDirective
+                                    field="name"
+                                    headerText="Name"
+                                    width="200"
+                                    textAlign="Left"
+                                    template={(props: UserData) => (
+                                        <div className="flex items-center gap-1.5 px-4">
+                                            <img src={props.imageUrl} alt="user" className="rounded-full size-8 aspect-square" referrerPolicy="no-referrer" />
+                                            <span>{props.name}</span>
+                                        </div>
+                                    )}
+                                />
+
+                                <ColumnDirective
+                                field={field}
+                                headerText={headerText}
+                                width="150"
+                                textAlign="Left"
+                                />
+                                </ColumnsDirective>
+                        </GridComponent>
+                    </div>
+                ))}
+            </section>
+
+
+    </main>
   );
 };
 
