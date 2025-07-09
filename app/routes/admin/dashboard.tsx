@@ -9,6 +9,8 @@ import {
 } from "appwrite/dashboard";
 import { gettAllTrips } from "appwrite/trips";
 import { parseTripData } from "lib/utils";
+import { Category, ChartComponent, ColumnSeries, DataLabel, Inject, SplineAreaSeries, Tooltip} from "@syncfusion/ej2-react-charts";
+import { userXAxis, useryAxis } from "~/constants";
 
 // loader function
 export const clientLoader = async () => {
@@ -126,6 +128,18 @@ const Dashboard = ({ loaderData }: Route.ComponentProps) => {
           ))}
         </div>
       </section>
+
+        <section className="grid grid-cols-1 md:grid-cols-2">
+           <ChartComponent id="chart-1"
+          primaryXAxis={userXAxis}
+          primaryYAxis={useryAxis}
+          title="User Growth"
+          tooltip={{enable: true}}
+           >
+              <Inject  services={[ColumnSeries, SplineAreaSeries, Category, DataLabel, Tooltip]} />
+           </ChartComponent>
+            
+        </section>
     </div>
   );
 };
